@@ -1,0 +1,30 @@
+/* app.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply bg-nfl-primary text-white px-4 py-2 rounded hover:bg-nfl-secondary transition-colors;
+    }
+
+    .btn-secondary {
+        @apply bg-nfl-secondary text-white px-4 py-2 rounded hover:bg-nfl-primary transition-colors;
+    }
+
+    .nav-link {
+        @apply text-white hover:text-nfl-accent transition-colors;
+    }
+
+    .nav-link.active {
+        @apply border-b-2 border-nfl-accent;
+    }
+
+    .form-input {
+        @apply rounded border-gray-300 focus:border-nfl-primary focus:ring focus:ring-nfl-primary/20;
+    }
+
+    .card {
+        @apply bg-white rounded-lg shadow p-6;
+    }
+}
