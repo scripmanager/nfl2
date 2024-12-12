@@ -21,8 +21,8 @@
                                 <h3 class="text-lg font-semibold">{{ $entry->name }}</h3>
                                 <p>Changes remaining: {{ $entry->changes_remaining }}</p>
                                 <div class="mt-2">
-                                    <a href="{{ route('entries.show', $entry) }}" class="text-blue-600">
-                                        View Details
+                                  <a href="{{ route('entries.roster', $entry) }}" class="text-blue-600">
+                                      View Details
                                     </a>
                                 </div>
                             </div>

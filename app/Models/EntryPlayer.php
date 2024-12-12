@@ -20,4 +20,14 @@ class EntryPlayer extends Pivot
         'total_points'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        
+        static::deleting(function ($pivot) {
+            // Log the event for debugging
+            \Log::info('Pivot deleting', ['pivot' => $pivot]);
+            return true; // Allow the delete to proceed
+        });
+    }
 }

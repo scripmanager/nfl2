@@ -24,7 +24,7 @@
                             <label class="block mb-2 text-sm font-medium text-gray-700">
                                 Entry Name
                             </label>
-                            <input type="text" name="name" class="w-full rounded-md border-gray-300" required>
+                            <input type="text" name="entry_name" class="w-full rounded-md border-gray-300" required>
                         </div>
 
 
@@ -121,40 +121,97 @@
     </div>
 
     @push('scripts')
-    <script>
-        document.getElementById('entryForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get all selected players
-            const selections = Array.from(this.querySelectorAll('select'))
-                .map(select => ({
-                    id: select.value,
-                    team: select.options[select.selectedIndex].dataset.team
-                }));
+<script>
+    // Store all original options for each dropdown
+    const originalOptions = {};
+    const selects = document.querySelectorAll('select[name^="players["]');
+    
+    selects.forEach(select => {
+        originalOptions[select.name] = Array.from(select.options).map(option => ({
+            value: option.value,
+            text: option.text,
+            team: option.dataset.team
+        }));
+    });
 
-            // Check for duplicate players
-            const playerIds = selections.map(s => s.id);
-            if (new Set(playerIds).size !== playerIds.length) {
-                alert('Each player can only be selected once');
+    // Function to update all dropdowns based on current selections
+    function updateDropdowns() {
+        // Get all currently selected values
+        const selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
+        
+        // Update each dropdown
+        selects.forEach(select => {
+            const currentValue = select.value;
+            
+            // Clear all options except the first one (placeholder)
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            // Add back options from original list, disabling if already selected elsewhere
+            originalOptions[select.name].forEach(option => {
+                if (option.value === '') return; // Skip placeholder option
+                
+                const isSelected = selectedValues.includes(option.value);
+                if (!isSelected || option.value === currentValue) {
+                    const opt = new Option(option.text, option.value);
+                    opt.dataset.team = option.team;
+                    
+                    if (isSelected && option.value !== currentValue) {
+                        opt.disabled = true;
+                    }
+                    
+                    select.add(opt);
+                }
+            });
+            
+            // Restore current selection
+            select.value = currentValue;
+        });
+    }
+
+    // Add change event listeners to all dropdowns
+    selects.forEach(select => {
+        select.addEventListener('change', updateDropdowns);
+    });
+
+    // Initialize dropdowns
+    updateDropdowns();
+
+    // Handle form submission
+    document.getElementById('entryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get all selected players
+        const selections = Array.from(this.querySelectorAll('select'))
+            .map(select => ({
+                id: select.value,
+                team: select.options[select.selectedIndex].dataset.team
+            }));
+
+        // Check for duplicate players
+        const playerIds = selections.map(s => s.id);
+        if (new Set(playerIds).size !== playerIds.length) {
+            alert('Each player can only be selected once');
+            return;
+        }
+
+        // Check team limits
+        const teamCounts = {};
+        selections.forEach(s => {
+            teamCounts[s.team] = (teamCounts[s.team] || 0) + 1;
+        });
+
+        for (const count of Object.values(teamCounts)) {
+            if (count > 2) {
+                alert('You cannot select more than 2 players from the same team');
                 return;
             }
+        }
 
-            // Check team limits
-            const teamCounts = {};
-            selections.forEach(s => {
-                teamCounts[s.team] = (teamCounts[s.team] || 0) + 1;
-            });
-
-            for (const count of Object.values(teamCounts)) {
-                if (count > 2) {
-                    alert('You cannot select more than 2 players from the same team');
-                    return;
-                }
-            }
-
-            // If all validations pass, submit the form
-            this.submit();
-        });
-    </script>
-    @endpush
+        // If all validations pass, submit the form
+        this.submit();
+    });
+</script>
+@endpush
 </x-app-layout>

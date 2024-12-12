@@ -3,7 +3,7 @@
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ route('home') }}">
+                            <a href="{{ route('dashboard') }}">
                                 <span class="text-white font-bold text-xl">NFL Playoff Fantasy</span>
                             </a>
                         </div>

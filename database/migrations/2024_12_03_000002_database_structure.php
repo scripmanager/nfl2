@@ -65,15 +65,14 @@ return new class extends Migration
             $table->foreignId('entry_id')->constrained();
             $table->foreignId('player_id')->constrained();
             $table->string('roster_position');
-            $table->decimal('wildcard_points', 8, 1)->default(0);
-            $table->decimal('divisional_points', 8, 1)->default(0);
-            $table->decimal('conference_points', 8, 1)->default(0);
-            $table->decimal('superbowl_points', 8, 1)->default(0);
-            $table->decimal('total_points', 8, 1)->default(0);
+            $table->decimal('wildcard_points', 8, 1)->default(0.0);
+            $table->decimal('divisional_points', 8, 1)->default(0.0);
+            $table->decimal('conference_points', 8, 1)->default(0.0);
+            $table->decimal('superbowl_points', 8, 1)->default(0.0);
+            $table->decimal('total_points', 8, 1)->default(0.0);
             $table->timestamp('removed_at')->nullable();
             $table->timestamps();
         });
-
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->foreignId('home_team_id')->constrained('teams');

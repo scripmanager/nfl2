@@ -30,15 +30,15 @@
 
     <!-- Change Player Modal -->
     <x-modal name="changePlayerModal" :show="false">
-    <form method="POST" action="{{ route('entries.update', $entry) }}" id="changePlayerForm" class="p-6">
+    <form method="POST" action="{{ route('entries.process-transaction', $entry) }}" id="changePlayerForm" class="p-6">
         @csrf
-        @method('PUT')
-        <input type="hidden" name="drop_player_id" id="dropPlayerId">
+        @method('POST')
+        <input type="hidden" name="dropped_player_id" id="dropPlayerId">
         <input type="hidden" name="position" id="position">
         
         <h3 class="text-lg font-medium mb-4">Select New Player</h3>
         
-        <select name="add_player_id" id="addPlayerId" class="w-full mb-4">
+        <select name="added_player_id" id="addPlayerId" class="w-full mb-4">
             <!-- Options populated by JS -->
         </select>
 
