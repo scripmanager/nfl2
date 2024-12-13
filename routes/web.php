@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PlayerController;
 use App\Http\Controllers\Admin\GameController;
 use App\Http\Controllers\Admin\TeamController;
