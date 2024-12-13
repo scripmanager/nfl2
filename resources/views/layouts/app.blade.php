@@ -8,7 +8,6 @@
    <style>[x-cloak] { display: none !important; }</style>
    @vite(['resources/css/app.css', 'resources/js/app.js'])
    @livewireStyles
-   <script src="/js/livewire.js"></script>
 </head>
 <body class="font-sans antialiased bg-gray-100">
    <div class="min-h-screen">
