@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'asset_url' => env('APP_URL') . '/livewire',
+    'asset_url' => env('APP_URL') . '/livewire/livewire',
     'class_namespace' => [
         'App\\Http\\Livewire',
         'App\\Http\\Livewire\\BulkStatsUpdate' => 'bulk-stats-update',
