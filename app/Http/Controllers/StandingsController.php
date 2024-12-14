@@ -30,37 +30,40 @@ class StandingsController extends Controller
     }
 
     public function weekly(Request $request, $week = null)
-    {
-        // Convert week numbers to round names
-        $weekToRound = array_flip($this->roundToWeek);
-        
-        // If no week specified, use Wild Card (week 1)
-        $weekNumber = $week ?? 1;
-        $round = $weekToRound[$weekNumber] ?? 'Wild Card';
+{
+    // Convert week numbers to round names
+    $weekToRound = array_flip($this->roundToWeek);
+    
+    // If no week specified, use Wild Card (week 1)
+    $weekNumber = $week ?? 1;
+    $round = $weekToRound[$weekNumber] ?? 'Wild Card';
 
-        $entries = Entry::with([
-            'players.playerStats' => function($query) use ($round) {
-                $query->whereHas('game', function($q) use ($round) {
-                    $q->where('round', $round);
-                });
-            }, 
-            'user'
-        ])
-        ->get()
-        ->map(function($entry) {
-            $entry->weekly_points = $entry->players->sum(function($player) {
-                return $player->playerStats->sum('points');
+    $entries = Entry::with([
+        'players.stats' => function($query) use ($round) {
+            $query->whereHas('game', function($q) use ($round) {
+                $q->where('round', $round);
             });
-            return $entry;
-        })
-        ->sortByDesc('weekly_points')
-        ->values();
+        }, 
+        'user'
+    ])
+    ->get()
+    ->map(function($entry) {
+        $entry->weekly_points = $entry->players->sum(function($player) {
+            // Use the stats relationship and calculate points for each game
+            return $player->stats->sum(function($stat) {
+                return $player->calculateWeeklyScore($stat->game_id);
+            });
+        });
+        return $entry;
+    })
+    ->sortByDesc('weekly_points')
+    ->values();
 
-        return view('standings.weekly', [
-            'entries' => $entries,
-            'week' => $weekNumber,
-            'weeks' => collect($this->roundToWeek)->values(),
-            'roundName' => $round
-        ]);
-    }
+    return view('standings.weekly', [
+        'entries' => $entries,
+        'week' => $weekNumber,
+        'weeks' => collect($this->roundToWeek)->values(),
+        'roundName' => $round
+    ]);
+}
 }
