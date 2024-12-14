@@ -34,12 +34,12 @@ class Transaction extends Model
 
     public function droppedPlayer()
     {
-        return $this->belongsTo(Player::class, 'dropped_player');
+        return $this->belongsTo(Player::class, 'droppedPlayer');
     }
 
     public function addedPlayer()
     {
-        return $this->belongsTo(Player::class, 'added_player');
+        return $this->belongsTo(Player::class, 'addedPlayer');
     }
 
     public function scopeForEntry($query, $entryId)
