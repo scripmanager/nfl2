@@ -20,7 +20,7 @@ class Transaction extends Model
         'processed_at'
     ];
 
-    protected $with = ['entry', 'droppedPlayer', 'addedPlayer'];
+    protected $with = ['entry', 'dropped_player', 'added_player'];
 
     public function entry()
     {
@@ -32,12 +32,12 @@ class Transaction extends Model
         return $this->entry->user();
     }
 
-    public function droppedPlayer()
+    public function dropped_player()
     {
         return $this->belongsTo(Player::class, 'dropped_player');
     }
 
-    public function addedPlayer()
+    public function added_player()
     {
         return $this->belongsTo(Player::class, 'added_player');
     }
@@ -49,6 +49,6 @@ class Transaction extends Model
 
     public function getTransactionDescription()
     {
-        return "Dropped {$this->droppedPlayer->name} ({$this->droppedPlayer->team->abbreviation}) for {$this->addedPlayer->name} ({$this->addedPlayer->team->abbreviation})";
+            return "Dropped {$this->dropped_player->name} ({$this->dropped_player->team->abbreviation}) for {$this->added_player->name} ({$this->added_player->team->abbreviation})";
     }
 }
