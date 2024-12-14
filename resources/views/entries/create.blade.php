@@ -97,7 +97,7 @@
                             <label class="block mb-2 text-sm font-medium text-gray-700">
                                 FLEX (RB/WR/TE)
                             </label>
-                            <select name="players[FLEX]" class="w-full rounded-md border-gray-300" >
+                            <select name="players[FLEX]" class="w-full rounded-md border-gray-300" required>
                                 <option value="">Select FLEX</option>
                                 @foreach(['RB', 'WR', 'TE'] as $pos)
                                     @foreach($players[$pos] ?? [] as $player)
