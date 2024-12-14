@@ -8,8 +8,8 @@ class Transaction extends Model
 {
     protected $fillable = [
         'entry_id',
-        'dropped_player',
-        'added_player',
+        'dropped_player_id',
+        'added_player_id',
         'roster_position',
         'processed_at',
         'transaction_type',
