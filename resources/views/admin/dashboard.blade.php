@@ -112,7 +112,7 @@
                                         {{ $transaction->entry->user->name }} - {{ $transaction->entry->name }}
                                     </div>
                                     <div class="text-sm text-gray-500">
-                                        Dropped: {{ $transaction->droppedPlayer->name }} for {{ $transaction->addedPlayer->name }}
+                                    Dropped: {{ $transaction->droppedPlayer->name ?? 'Unknown Player' }} for {{ $transaction->addedPlayer->name ?? 'Unknown Player' }}
                                     </div>
                                     <div class="text-xs text-gray-400">
                                         {{ $transaction->created_at->diffForHumans() }}

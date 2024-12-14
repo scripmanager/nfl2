@@ -28,7 +28,7 @@ class AdminController extends Controller
            'totalUsers' => User::count(),
            'totalEntries' => Entry::count(), 
            'activeGames' => Game::where('status', 'active')->count(),
-           'recentTransactions' => Transaction::with(['entry.user', 'dropped_player', 'added_player'])->latest()->take(5)->get(),
+           'recentTransactions' => Transaction::with(['entry.user', 'droppedPlayer', 'addedPlayer'])->latest()->take(5)->get(),    
            'recentStats' => PlayerStats::with(['game', 'player'])->latest()->take(5)->get(),
        ]);
    }

@@ -20,6 +20,7 @@ class Transaction extends Model
         'processed_at'
     ];
 
+    // Update the $with array to use consistent naming
     protected $with = ['entry', 'droppedPlayer', 'addedPlayer'];
 
     public function entry()
@@ -27,20 +28,27 @@ class Transaction extends Model
         return $this->belongsTo(Entry::class);
     }
 
-    public function user()
-    {
-        return $this->entry->user();
-    }
-
     public function droppedPlayer()
     {
-        return $this->belongsTo(Player::class, 'droppedPlayer');
+        return $this->belongsTo(Player::class, 'dropped_player_id');
     }
 
     public function addedPlayer()
     {
-        return $this->belongsTo(Player::class, 'addedPlayer');
+        return $this->belongsTo(Player::class, 'added_player_id');
     }
+
+    // Update the accessors to match relationship names
+    public function getDroppedPlayerNameAttribute()
+    {
+        return $this->droppedPlayer ? $this->droppedPlayer->name : 'Unknown Player';
+    }
+
+    public function getAddedPlayerNameAttribute()
+    {
+        return $this->addedPlayer ? $this->addedPlayer->name : 'Unknown Player';
+    }
+
 
     public function scopeForEntry($query, $entryId)
     {

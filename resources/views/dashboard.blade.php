@@ -14,9 +14,10 @@
                         <div class="text-lg font-semibold text-white mb-4">Total Entries</div>
                         <div class="text-3xl font-bold text-white">{{ $entriesCount }} / 4</div>
                         @if($remainingEntries > 0)
-                            <x-button href="{{ route('entries.create') }}" variant="ghost" class="mt-2">
+                            <a href="{{ route('entries.create') }}" 
+                                class="inline-flex items-center justify-center px-4 py-2 bg-nfl-secondary text-white font-medium rounded-lg hover:bg-nfl-secondary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nfl-secondary/50 transition-colors mt-2">
                                 Add Entry (+{{ $remainingEntries }} remaining)
-                            </x-button>
+                            </a>
                         @endif
                     </div>
                     <div class="bg-nfl-secondary border border-nfl-secondary/20 p-4 rounded-lg">
@@ -44,9 +45,10 @@
                 @if($entries->isEmpty())
                     <div class="text-center py-8">
                         <p class="text-gray-600 mb-4">You haven't created any entries yet.</p>
-                        <x-button href="{{ route('entries.create') }}" variant="primary">
-                            Create Your First Entry
-                        </x-button>
+                        <a href="{{ route('entries.create') }}" 
+                        class="inline-flex items-center justify-center px-4 py-2 bg-nfl-primary text-white font-medium rounded-lg hover:bg-nfl-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nfl-primary/50 transition-colors mt-2">
+                                Create Your First Entry
+                        </a>
                     </div>
                 @else
                     <div class="grid md:grid-cols-2 gap-6">
