@@ -19,12 +19,12 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form method="POST" action="{{ route('entries.store') }}" id="entryForm">
                         @csrf
-                        
+
                         <div class="mb-6">
                             <label class="block mb-2 text-sm font-medium text-gray-700">
                                 Entry Name
                             </label>
-                            <input type="text" name="entry_name" class="w-full rounded-md border-gray-300" required>
+                            <input type="text" name="entry_name" class="w-full rounded-md border-gray-300"  value="{{ old('entry_name') }}" required>
                         </div>
 
 
@@ -36,7 +36,7 @@
                             <select name="players[QB]" class="w-full rounded-md border-gray-300" required>
                                 <option value="">Select QB</option>
                                 @foreach($players['QB'] ?? [] as $player)
-                                    <option value="{{ $player->id }}" data-team="{{ $player->team_id }}">
+                                    <option value="{{ $player->id }}" data-team="{{ $player->team_id }}" {{ old('players.QB')==$player->id ? ' selected' : ''}}>
                                         {{ $player->name }} - {{ $player->team->name }}
                                     </option>
                                 @endforeach
@@ -52,7 +52,7 @@
                                 <select name="players[{{ $rb }}]" class="w-full rounded-md border-gray-300" required>
                                     <option value="">Select RB</option>
                                     @foreach($players['RB'] ?? [] as $player)
-                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}">
+                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}" {{ old('players.'.$rb)==$player->id ? ' selected' : ''}}>
                                             {{ $player->name }} - {{ $player->team->name }}
                                         </option>
                                     @endforeach
@@ -69,7 +69,7 @@
                                 <select name="players[{{ $wr }}]" class="w-full rounded-md border-gray-300" required>
                                     <option value="">Select WR</option>
                                     @foreach($players['WR'] ?? [] as $player)
-                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}">
+                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}" {{ old('players.'.$wr)==$player->id ? ' selected' : ''}}>
                                             {{ $player->name }} - {{ $player->team->name }}
                                         </option>
                                     @endforeach
@@ -85,7 +85,7 @@
                             <select name="players[TE]" class="w-full rounded-md border-gray-300" required>
                                 <option value="">Select TE</option>
                                 @foreach($players['TE'] ?? [] as $player)
-                                    <option value="{{ $player->id }}" data-team="{{ $player->team_id }}">
+                                    <option value="{{ $player->id }}" data-team="{{ $player->team_id }}"  {{ old('players.TE')==$player->id ? ' selected' : ''}}>
                                         {{ $player->name }} - {{ $player->team->name }}
                                     </option>
                                 @endforeach
@@ -97,11 +97,11 @@
                             <label class="block mb-2 text-sm font-medium text-gray-700">
                                 FLEX (RB/WR/TE)
                             </label>
-                            <select name="players[FLEX]" class="w-full rounded-md border-gray-300" required>
+                            <select name="players[FLEX]" class="w-full rounded-md border-gray-300" >
                                 <option value="">Select FLEX</option>
                                 @foreach(['RB', 'WR', 'TE'] as $pos)
                                     @foreach($players[$pos] ?? [] as $player)
-                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}">
+                                        <option value="{{ $player->id }}" data-team="{{ $player->team_id }}"  {{ old('players.FLEX')==$player->id ? ' selected' : ''}}>
                                             {{ $player->name }} ({{ $pos }}) - {{ $player->team->name }}
                                         </option>
                                     @endforeach
@@ -125,7 +125,7 @@
     // Store all original options for each dropdown
     const originalOptions = {};
     const selects = document.querySelectorAll('select[name^="players["]');
-    
+
     selects.forEach(select => {
         originalOptions[select.name] = Array.from(select.options).map(option => ({
             value: option.value,
@@ -138,33 +138,33 @@
     function updateDropdowns() {
         // Get all currently selected values
         const selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
-        
+
         // Update each dropdown
         selects.forEach(select => {
             const currentValue = select.value;
-            
+
             // Clear all options except the first one (placeholder)
             while (select.options.length > 1) {
                 select.remove(1);
             }
-            
+
             // Add back options from original list, disabling if already selected elsewhere
             originalOptions[select.name].forEach(option => {
                 if (option.value === '') return; // Skip placeholder option
-                
+
                 const isSelected = selectedValues.includes(option.value);
                 if (!isSelected || option.value === currentValue) {
                     const opt = new Option(option.text, option.value);
                     opt.dataset.team = option.team;
-                    
+
                     if (isSelected && option.value !== currentValue) {
                         opt.disabled = true;
                     }
-                    
+
                     select.add(opt);
                 }
             });
-            
+
             // Restore current selection
             select.value = currentValue;
         });
@@ -181,7 +181,7 @@
     // Handle form submission
     document.getElementById('entryForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Get all selected players
         const selections = Array.from(this.querySelectorAll('select'))
             .map(select => ({
