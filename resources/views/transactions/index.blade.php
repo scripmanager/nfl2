@@ -17,7 +17,7 @@
                                     <option value="">All Entries</option>
                                     @foreach(Auth::user()->entries as $userEntry)
                                         <option value="{{ $userEntry->id }}" {{ request('entry_id') == $userEntry->id ? 'selected' : '' }}>
-                                            {{ $userEntry->name }}
+                                            {{ $userEntry->entry_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -66,7 +66,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
                                             No transactions found.
                                         </td>
                                     </tr>
