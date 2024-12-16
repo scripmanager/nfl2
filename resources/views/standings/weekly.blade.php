@@ -13,9 +13,9 @@
                         </option>
                     @endforeach
                 </select>
-                <a href="{{ route('standings.index') }}" class="text-blue-600 hover:text-blue-800">
+                <x-primary-button class="ml-3 bg-nfl-primary text-white hover:bg-nfl-secondary px-2 py-2 rounded" onclick="window.location.href='{{ route('standings.index') }}'">
                     View Overall Standings
-                </a>
+                </x-primary-button>
             </div>
         </div>
     </x-slot>
@@ -26,14 +26,15 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
-                            <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Entry Name</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Owner</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">{{ $roundName }} Points</th>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2">Rank</th>
+                                <th class="px-4 py-2">Entry Name</th>
+                                <th class="px-4 py-2">Owner</th>
+                                <th class="px-4 py-2">{{ $roundName }} Points</th>
+                                <th class="px-4 py-2">Actions</th>  <!-- New column -->                                  
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-200 text-center">
                             @foreach($entries as $index => $entry)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
@@ -47,6 +48,11 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ number_format($entry->weekly_points, 1) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                        <x-primary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-2 py-2 rounded" onclick="window.location.href='{{ route('entries.public.roster', $entry) }}'">
+                                            View Roster
+                                        </x-primary-button>
                                     </td>
                                 </tr>
                             @endforeach

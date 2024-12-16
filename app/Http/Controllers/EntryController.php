@@ -381,4 +381,32 @@ class EntryController extends Controller
             throw ValidationException::withMessages(['position' => ['Only 1 TE allowed']]);
         }
     }
+    public function publicIndex()
+{
+        $entries = Entry::with(['user', 'players'])
+            ->orderBy('total_points', 'desc')
+            ->get();
+
+        return view('entries.public.index', [
+            'entries' => $entries
+        ]);
+    }
+
+    public function publicRoster(Entry $entry)
+    {
+        $entry->load(['players' => function($query) {
+            $query->with('team')->select('players.*');
+        }]);
+    
+        // Calculate total points and points by position using ScoringService
+        $scoringService = new ScoringService();
+        $totalPoints = $scoringService->calculateTotalPoints($entry->players->flatMap->stats);
+        $pointsByPosition = $scoringService->calculatePointsByPosition($entry);
+    
+        return view('entries.public.roster', [
+            'entry' => $entry->load('players.team', 'user'),
+            'totalPoints' => $totalPoints,
+            'pointsByPosition' => $pointsByPosition,
+        ]);
+    }
 }

@@ -64,6 +64,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Standings routes
     Route::get('/standings', [StandingsController::class, 'index'])->name('standings.index');
     Route::get('/standings/week/{week}', [StandingsController::class, 'weekly'])->name('standings.weekly');
+    
+    // Public entry routes
+    Route::get('/public-entries', [EntryController::class, 'publicIndex'])->name('entries.public');
+    Route::get('/public-entries/{entry}', [EntryController::class, 'publicRoster'])->name('entries.public.roster');
+    Route::get('/entries/{entry}/public', [EntryController::class, 'publicRoster'])->name('entries.public.roster');
 
     // Transactions route
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

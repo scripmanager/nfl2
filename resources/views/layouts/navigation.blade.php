@@ -9,8 +9,9 @@
                     <div class="flex space-x-4">
                         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                         <a href="{{ route('dashboard') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('dashboard') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Dashboard</a>
-                        <a href="{{ route('entries.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('entries.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">My Entries</a>
-                        <a href="{{ route('standings.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('standings.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Standings</a>
+                        <a href="{{ route('entries.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('entries.index','entries.create','entries.store','entries.roster','entries.add-player','entries.process-transaction') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">My Entries</a>
+                        <a href="{{ route('standings.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('standings.*','entries.public.roster') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Standings</a>
+                        <!-- <a href="{{ route('entries.public') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('entries.public','entries.public.roster') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Entries</a> -->
                         <a href="{{ route('transactions.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('transactions.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Transactions</a>
                     </div>
                 </div>
@@ -81,11 +82,10 @@
         <div class="space-y-1 px-2 pb-3 pt-2">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <a href="{{ route('dashboard') }}" class="block rounded-md px-3 py-2 text-base font-medium {{ Request::routeIs('dashboard') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Dashboard</a>
-            <a href="{{ route('entries.index') }}" class="block rounded-md px-3 py-2 text-base font-medium {{ Request::routeIs('entries.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">My Entries</a>
-            <a href="{{ route('standings.index') }}" class="block rounded-md px-3 py-2 text-base font-medium {{ Request::routeIs('standings.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Standings</a>
+            <a href="{{ route('entries.index') }}" class="block rounded-md px-3 py-2 text-base font-medium {{ Request::routeIs('entries.index','entries.create','entries.store','entries.roster','entries.add-player','entries.process-transaction') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">My Entries</a>
+            <a href="{{ route('standings.index') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('standings.*','entries.public.roster') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Standings</a>
+                        <!-- <a href="{{ route('entries.public') }}" class="rounded-md px-3 py-2 font-medium {{ Request::routeIs('entries.public','entries.public.roster') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Entries</a> -->
             <a href="{{ route('transactions.index') }}" class="block rounded-md px-3 py-2 text-base font-medium {{ Request::routeIs('transactions.*') ? 'bg-blue-200 text-gray-700' : 'text-gray-300 hover:bg-gray-200 hover:text-gray-700' }}">Transactions</a>
-
-
         </div>
         <div class="border-t border-gray-700 pb-3 pt-4">
             <div class="flex items-center px-5">
@@ -123,12 +123,15 @@
                                 <a href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
                                     {{ __('Dashboard') }}
 </a >
-                                <a href="{{ route('entries.index') }}" :active="request()->routeIs('entries.*')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
+                                <a href="{{ route('entries.index') }}" :active="request()->routeIs('entries.index','entries.create','entries.store','entries.roster','entries.add-player','entries.process-transaction')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
                                     {{ __('My Entries') }}
                                 </a>
-                                <a href="{{ route('standings.index') }}" :active="request()->routeIs('standings.*')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
+                                <a href="{{ route('standings.index') }}" :active="request()->routeIs('standings.*','entries.public.roster')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
                                     {{ __('Standings') }}
                                 </a>
+                                <!-- <a href="{{ route('entries.public') }}" :active="request()->routeIs('entries.public')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
+                                    {{ __('Entries') }}
+                                </a> -->
                                 <a href="{{ route('transactions.index') }}" :active="request()->routeIs('transactions.*')" class="nav-link text-white px-3 py-2 mt-4 rounded-md text-sm font-medium">
                                     {{ __('Transactions') }}
                                 </a>
