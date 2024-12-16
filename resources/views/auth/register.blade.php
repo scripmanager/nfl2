@@ -41,9 +41,9 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-1 py-1 rounded" href="{{ route('login') }}">
+            <x-primary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-2 py-2 rounded" onclick="window.location.href='{{ route('login') }}'">
                 {{ __('Already registered?') }}
-            </a>
+            </x-primary-button>
 
             <x-primary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-2 py-2 rounded">
                 {{ __('Register') }}

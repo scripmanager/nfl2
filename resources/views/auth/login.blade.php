@@ -34,13 +34,15 @@
 
         <div class="flex items-center justify-end mt-4">
     @if (Route::has('password.request'))
-        <a class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-1 py-1 rounded" href="{{ route('password.request') }}">
-            {{ __('Forgot your password?') }}
+        <a class="ms-2 text-sm text-gray-600" href='{{ route('password.request') }}'">
+            Forgot your password?
         </a>
     @endif
 
     @if (Route::has('register'))
-    <a href="{{ route('register') }}" class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-1 py-1 rounded">Register</a>
+    <x-primary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-2 py-2 rounded" onclick="window.location.href='{{ route('register') }}'">
+        {{ __('Register') }}
+    </x-primary-button>
     @endif
     
     <x-primary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-2 py-2 rounded">
