@@ -53,9 +53,9 @@
                                 <thead class="bg-nfl-accent">
                                     <tr>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Player</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Pass</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Rush</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Receive</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Passing</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Rushing</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Receiving</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Other</th>
                                         <th class="px-4 py-2 text-right text-xs font-medium text-white uppercase tracking-wider">Points</th>
                                     </tr>
