@@ -34,6 +34,7 @@ return new class extends Migration
             $table->foreignId('team_id')->constrained();
             $table->string('position');
             $table->boolean('is_active')->default(true);
+            $table->string('status')->default('active');
             $table->string('external_id')->nullable();
             $table->timestamps();
         });

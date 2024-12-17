@@ -10,24 +10,24 @@
                     <a href="{{ route('admin.players.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Player</a>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="p-6 bg-white border-b border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2">Name</th>
+                                <th class="px-4 py-2">Position</th>
+                                <th class="px-4 py-2">Team</th>
+                                <th class="px-4 py-2">Status</th>
+                                <th class="px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($players as $player)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $player->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $player->position }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $player->team->name ?? 'No Team' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                            <tr class="text-center">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $player->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $player->position }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $player->team->name ?? 'No Team' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     @if($player->status === 'active') bg-green-100 text-green-800 
                                     @elseif($player->status === 'injured') bg-red-100 text-red-800 

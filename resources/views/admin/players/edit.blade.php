@@ -6,6 +6,15 @@
    </x-slot>
 
    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+   @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
        <div class="p-6 bg-white border-b border-gray-200">
            <form method="POST" action="{{ route('admin.players.update', $player) }}">
                @csrf
@@ -56,11 +65,26 @@
                </div>
 
                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                       Status
+                   </label>
+                   <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="status"
+                           name="status"
+                           required>
+                       <option value="">Select Status</option>
+                       <option value="active" {{ old('status', $player->status) == 'active' ? 'selected' : '' }}>Active</option>
+                       <option value="inactive" {{ old('status', $player->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                       <option value="injured" {{ old('status', $player->status) == 'injured' ? 'selected' : '' }}>Injured</option>
+                   </select>
+               </div>
+
+               <div class="mb-4">
                    <label class="flex items-center">
                        <input type="checkbox" 
-                              name="active" 
+                              name="is_active" 
                               value="1" 
-                              {{ old('active', $player->active) ? 'checked' : '' }}
+                              {{ old('is_active', $player->is_active) ? 'checked' : '' }}
                               class="form-checkbox">
                        <span class="ml-2">Active</span>
                    </label>

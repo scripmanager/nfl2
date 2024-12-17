@@ -55,16 +55,31 @@
                 </div>
 
                 <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                        Status
+                    </label>
+                    <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="status"
+                            name="status"
+                            required>
+                        <option value="">Select Status</option>
+                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="injured" {{ old('status') == 'injured' ? 'selected' : '' }}>Injured</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
                     <label class="flex items-center">
                         <input type="checkbox" 
-                               name="active" 
+                               name="is_active" 
                                value="1" 
-                               {{ old('active', true) ? 'checked' : '' }}
+                               {{ old('is_active', true) ? 'checked' : '' }}
                                class="form-checkbox">
                         <span class="ml-2">Active</span>
                     </label>
                 </div>
-
+                
                 <div class="flex items-center justify-end">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Create Player

@@ -16,6 +16,7 @@ class Player extends Model
         'team_id',
         'position',
         'is_active',
+        'status',
         'external_id',
     ];
 

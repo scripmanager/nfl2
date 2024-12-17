@@ -12,45 +12,45 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <table class="min-w-full">
+                    <table class="min-w-full divide-y divide-gray-200">
                         <thead>
-                            <tr>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Game</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Pass Yds</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Pass TD</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">INT</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Rush Yds</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Rush TD</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Rec</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Rec Yds</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Rec TD</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">2PC</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Fum</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Fum TD</th>
-                                <th class="px-2 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2">Player</th>
+                                <th class="px-4 py-2">Game</th>
+                                <th class="px-4 py-2">Pass Yds</th>
+                                <th class="px-4 py-2">Pass TD</th>
+                                <th class="px-4 py-2">INT</th>
+                                <th class="px-4 py-2">Rush Yds</th>
+                                <th class="px-4 py-2">Rush TD</th>
+                                <th class="px-4 py-2">Rec</th>
+                                <th class="px-4 py-2">Rec Yds</th>
+                                <th class="px-4 py-2">Rec TD</th>
+                                <th class="px-4 py-2">2PC</th>
+                                <th class="px-4 py-2">Fum</th>
+                                <th class="px-4 py-2">Fum TD</th>
+                                <th class="px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white">
                             @forelse($stats as $stat)
                                 <tr>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->player->name }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->game->id }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->passing_yards }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->passing_tds }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->interceptions }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->rushing_yards }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->rushing_tds }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->receptions }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->receiving_yards }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->receiving_tds }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->two_point_conversions }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->fumbles_lost }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap border-b border-gray-200">{{ $stat->offensive_fumble_return_td }}</td>
-                                    <td class="px-2 py-4 whitespace-nowrap text-right border-b border-gray-200">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->player->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->game->id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->passing_yards }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->passing_tds }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->interceptions }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->rushing_yards }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->rushing_tds }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->receptions }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->receiving_yards }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->receiving_tds }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->two_point_conversions }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->fumbles_lost }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->offensive_fumble_return_td }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <a href="{{ route('admin.player-stats.edit', $stat) }}"
                                            class="text-blue-600 hover:text-blue-900 mr-4">Edit</a>
                                         <form action="{{ route('admin.player-stats.destroy', $stat) }}" method="POST" class="inline">
