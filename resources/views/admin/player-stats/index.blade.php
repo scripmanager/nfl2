@@ -1,3 +1,4 @@
+@inject('scoringService', 'App\Services\ScoringService')
 <x-admin-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -12,10 +13,10 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div style="width: fit-content; min-width: 100%;" class="sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-100">
                                 <th class="px-4 py-2">Player</th>
@@ -31,6 +32,7 @@
                                 <th class="px-4 py-2">2PC</th>
                                 <th class="px-4 py-2">Fum</th>
                                 <th class="px-4 py-2">Fum TD</th>
+                                <th class="px-4 py-2">Points</th>
                                 <th class="px-4 py-2">Actions</th>
                             </tr>
                         </thead>
@@ -50,6 +52,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->two_point_conversions }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->fumbles_lost }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->offensive_fumble_return_td }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $scoringService->calculateGamePoints($stat->game, $stat->player)['points'] }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
                                         <a href="{{ route('admin.player-stats.edit', ['player_stat' => $stat]) }}"

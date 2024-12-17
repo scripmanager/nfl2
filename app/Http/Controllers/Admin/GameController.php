@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Game;
 use App\Models\Team;
 use App\Models\Player;
-use App\Models\PlayerStat;
+use App\Models\PlayerStats;
 use App\Models\Entry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

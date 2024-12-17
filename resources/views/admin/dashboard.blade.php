@@ -57,19 +57,19 @@ class="inline-flex items-center justify-center px-4 py-2 bg-purple-600 border bo
         <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-8">
             <div class="p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Current Games</h3>
-                <div class="overflow-x-auto">
+                <div class="p-6 bg-white border-b border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
-                            <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Game</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2">Game</th>
+                                <th class="px-4 py-2">Status</th>
+                                <th class="px-4 py-2">Score</th>
+                                <th class="px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach(\App\Models\Game::whereIn('status', ['scheduled', 'in_progress'])->orderBy('kickoff')->get() as $game)
-                                <tr>
+                                <tr class="text-center">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $game->homeTeam->name }} vs {{ $game->awayTeam->name }}
                                     </td>
@@ -83,8 +83,10 @@ class="inline-flex items-center justify-center px-4 py-2 bg-purple-600 border bo
                                         {{ $game->home_score }} - {{ $game->away_score }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('admin.games.edit', $game) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Update Score</a>
-                                        <a href="{{ route('admin.games.stats', $game) }}" class="text-green-600 hover:text-green-900">Manage Stats</a>
+                                        <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
+                                            <a href="{{ route('admin.games.edit', $game) }}" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative">Update Score</a>
+                                            <a href="{{ route('admin.games.stats', $game) }}" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative">Manage Stats</a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
