@@ -1,3 +1,4 @@
+@inject('scoringService', 'App\Services\ScoringService')
 <x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-nfl-primary leading-tight">
@@ -85,9 +86,18 @@
                                                 FUM L: {{ $stat->fumbles_lost }}<br>
                                                 FUM TD: {{ $stat->offensive_fumble_return_td }}
                                             </td>
-                                            <td class="px-4 py-2 text-sm text-right text-gray-900 font-semibold">
-                                                {{ $stat->calculatePoints() }}
-                                            </td>
+                                            <td class="px-4 py-2 text-sm text-right text-gray-900">
+                                                @php
+                                                    $pointsData = $scoringService->calculateGamePoints($game, $stat->player);
+                                                @endphp
+                                                <div class="font-semibold">{{ $pointsData['points'] }}</div>
+                                                <div class="text-xs text-gray-500">
+                                                    (P: {{ $pointsData['breakdown']['passing'] }},
+                                                    R: {{ $pointsData['breakdown']['rushing'] }},
+                                                    Rec: {{ $pointsData['breakdown']['receiving'] }},
+                                                    M: {{ $pointsData['breakdown']['misc'] }})
+                                            </div>
+                                        </td>
                                         </tr>
                                     @empty
                                         <tr>

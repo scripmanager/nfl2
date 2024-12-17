@@ -11,19 +11,19 @@
     </x-slot>
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 bg-white border-b border-gray-200">
-            <table class="min-w-full">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Abbreviation</th>
-                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Playoff Team</th>
-                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+    <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-100 items-center">
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Abbreviation</th>
+                        <th class="px-4 py-2">Playoff Team</th>
+                        <th class="px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
                     @foreach ($teams as $team)
-                    <tr>
+                    <tr class="text-center">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $team->name }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $team->abbreviation }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
@@ -31,7 +31,7 @@
                                 {{ $team->is_playoff_team ? 'Yes' : 'No' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200">
+                        <td class="px-6 py-4 whitespace-no-wrap text-center border-b border-gray-200">
                             <a href="{{ route('admin.teams.edit', $team) }}" class="text-blue-600 hover:text-blue-900 mr-4">Edit</a>
                             <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="inline">
                                 @csrf

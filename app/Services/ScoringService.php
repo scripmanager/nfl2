@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Game;  // Add this import
+use App\Models\Player;
+use App\Models\Entry;
 use App\Models\PlayerStat;
 
 class ScoringService
