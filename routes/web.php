@@ -91,7 +91,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Team Management
     Route::resource('teams', TeamController::class, ['as' => 'admin']);
 
-    // Player Stats Management
+// Player Stats Management
+    Route::resource('player-stats', PlayerStatsController::class, ['as' => 'admin'])
+        ->parameters(['player-stats' => 'player_stat']);
+    /*
     Route::get('player-stats', [PlayerStatsController::class, 'index'])->name('admin.player-stats.index');
     Route::get('player-stats/create', [PlayerStatsController::class, 'create'])->name('admin.player-stats.create');
     Route::post('player-stats', [PlayerStatsController::class, 'store'])->name('admin.player-stats.store');
@@ -99,6 +102,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('player-stats/{game}/edit', [PlayerStatsController::class, 'edit'])->name('admin.player-stats.edit');
     Route::put('player-stats/{game}', [PlayerStatsController::class, 'update'])->name('admin.player-stats.update');
     Route::delete('player-stats/{stats}', [PlayerStatsController::class, 'destroy'])->name('admin.player-stats.destroy');
+    */
     Route::get('/bulk-stats', [AdminController::class, 'bulkStats'])->name('admin.bulk-stats.index');
     Route::get('games/{game}/stats', [GameController::class, 'stats'])->name('admin.games.stats');
     Route::post('/games/stats/bulk-update', [GameController::class, 'bulkUpdate'])

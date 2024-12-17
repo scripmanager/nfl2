@@ -55,29 +55,42 @@ class BulkStatsUpdate extends Component
         try {
             $csv = Reader::createFromPath($this->statsFile->path());
             $csv->setHeaderOffset(0);
-            $csv->setDelimiter(','); // Explicitly set the delimiter
+            $csv->setDelimiter(',');
+            
+            // Clean up headers by trimming whitespace
+            $headers = array_map('trim', $csv->getHeader());
             
             \DB::beginTransaction();
             
             foreach ($csv->getRecords() as $record) {
-                // Convert array values to integers where needed
+                // Clean up record keys and ensure all required fields exist
+                $record = array_combine(
+                    array_map('trim', array_keys($record)),
+                    array_map('trim', $record)
+                );
+                
+                // Verify required fields exist
+                if (!isset($record['game_id']) || !isset($record['player_id'])) {
+                    throw new \Exception('Required fields missing: game_id and player_id are required');
+                }
+    
                 PlayerStats::updateOrCreate(
                     [
                         'game_id' => (int)$record['game_id'],
                         'player_id' => (int)$record['player_id'],
                     ],
                     [
-                        'passing_yards' => (int)$record['passing_yards'],
-                        'passing_tds' => (int)$record['passing_tds'],
-                        'interceptions' => (int)$record['interceptions'],
-                        'rushing_yards' => (int)$record['rushing_yards'],
-                        'rushing_tds' => (int)$record['rushing_tds'],
-                        'receptions' => (int)$record['receptions'],
-                        'receiving_yards' => (int)$record['receiving_yards'],
-                        'receiving_tds' => (int)$record['receiving_tds'],
-                        'two_point_conversions' => (int)$record['two_point_conversions'],
-                        'fumbles_lost' => (int)$record['fumbles_lost'],
-                        'offensive_fumble_return_td' => (int)$record['offensive_fumble_return_td']
+                        'passing_yards' => (int)($record['passing_yards'] ?? 0),
+                        'passing_tds' => (int)($record['passing_tds'] ?? 0),
+                        'interceptions' => (int)($record['interceptions'] ?? 0),
+                        'rushing_yards' => (int)($record['rushing_yards'] ?? 0),
+                        'rushing_tds' => (int)($record['rushing_tds'] ?? 0),
+                        'receptions' => (int)($record['receptions'] ?? 0),
+                        'receiving_yards' => (int)($record['receiving_yards'] ?? 0),
+                        'receiving_tds' => (int)($record['receiving_tds'] ?? 0),
+                        'two_point_conversions' => (int)($record['two_point_conversions'] ?? 0),
+                        'fumbles_lost' => (int)($record['fumbles_lost'] ?? 0),
+                        'offensive_fumble_return_td' => (int)($record['offensive_fumble_return_td'] ?? 0)
                     ]
                 );
             }

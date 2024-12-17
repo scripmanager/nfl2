@@ -45,11 +45,12 @@ class PlayerStatsController extends Controller
         return redirect()->route('admin.player-stats.index')->with('success', 'Stats added successfully');
     }
 
-    public function edit(PlayerStats $playerStats)
+    public function edit(PlayerStats $playerStat)
     {
-        $players = Player::all();
-        $games = Game::all();
-        return view('player-stats.edit', compact('playerStats', 'players', 'games'));
+        $games = Game::with(['homeTeam', 'awayTeam'])->orderBy('kickoff')->get();
+        $players = Player::with('team')->orderBy('name')->get();
+        
+        return view('admin.player-stats.edit', compact('playerStat', 'games', 'players'));
     }
 
     public function update(Request $request, PlayerStats $playerStats)

@@ -6,7 +6,7 @@
         <select name="game_id" id="game_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             <option value="">Select a game</option>
             @foreach($games as $game)
-                <option value="{{ $game->id }}" {{ old('game_id', $stats->game_id ?? '') == $game->id ? 'selected' : '' }}>
+                <option value="{{ $game->id }}" {{ old('game_id', $player_stat->game_id ?? '') == $game->id ? 'selected' : '' }}>
                     {{ $game->homeTeam->name }} vs {{ $game->awayTeam->name }} - {{ \Carbon\Carbon::parse($game->kickoff)->format('M d, Y') }}
                 </option>
             @endforeach
@@ -21,7 +21,7 @@
         <select name="player_id" id="player_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             <option value="">Select a player</option>
             @foreach($players as $player)
-                <option value="{{ $player->id }}" {{ old('player_id', $stats->player_id ?? '') == $player->id ? 'selected' : '' }}>
+                <option value="{{ $player->id }}" {{ old('player_id', $player_stat->player_id ?? '') == $player->id ? 'selected' : '' }}>
                     {{ $player->name }} - {{ $player->position }} ({{ $player->team->abbreviation }})
                 </option>
             @endforeach
@@ -39,7 +39,7 @@
                 <div>
                     <label for="passing_yards" class="block text-sm font-medium text-gray-700">Passing Yards</label>
                     <input type="number" name="passing_yards" id="passing_yards" 
-                           value="{{ old('passing_yards', $stats->passing_yards ?? '') }}"
+                           value="{{ old('passing_yards', $player_stat->passing_yards ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('passing_yards')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -49,7 +49,7 @@
                 <div>
                     <label for="passing_tds" class="block text-sm font-medium text-gray-700">Passing TDs</label>
                     <input type="number" name="passing_tds" id="passing_tds" 
-                           value="{{ old('passing_tds', $stats->passing_tds ?? '') }}"
+                           value="{{ old('passing_tds', $player_stat->passing_tds ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('passing_tds')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -59,7 +59,7 @@
                 <div>
                     <label for="interceptions" class="block text-sm font-medium text-gray-700">Interceptions</label>
                     <input type="number" name="interceptions" id="interceptions" 
-                           value="{{ old('interceptions', $stats->interceptions ?? '') }}"
+                           value="{{ old('interceptions', $player_stat->interceptions ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('interceptions')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -75,7 +75,7 @@
                 <div>
                     <label for="rushing_yards" class="block text-sm font-medium text-gray-700">Rushing Yards</label>
                     <input type="number" name="rushing_yards" id="rushing_yards" 
-                           value="{{ old('rushing_yards', $stats->rushing_yards ?? '') }}"
+                           value="{{ old('rushing_yards', $player_stat->rushing_yards ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('rushing_yards')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -85,7 +85,7 @@
                 <div>
                     <label for="rushing_tds" class="block text-sm font-medium text-gray-700">Rushing TDs</label>
                     <input type="number" name="rushing_tds" id="rushing_tds" 
-                           value="{{ old('rushing_tds', $stats->rushing_tds ?? '') }}"
+                           value="{{ old('rushing_tds', $player_stat->rushing_tds ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('rushing_tds')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -101,7 +101,7 @@
                 <div>
                     <label for="receptions" class="block text-sm font-medium text-gray-700">Receptions</label>
                     <input type="number" name="receptions" id="receptions" 
-                           value="{{ old('receptions', $stats->receptions ?? '') }}"
+                           value="{{ old('receptions', $player_stat->receptions ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('receptions')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -111,7 +111,7 @@
                 <div>
                     <label for="receiving_yards" class="block text-sm font-medium text-gray-700">Receiving Yards</label>
                     <input type="number" name="receiving_yards" id="receiving_yards" 
-                           value="{{ old('receiving_yards', $stats->receiving_yards ?? '') }}"
+                           value="{{ old('receiving_yards', $player_stat->receiving_yards ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('receiving_yards')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -121,7 +121,7 @@
                 <div>
                     <label for="receiving_tds" class="block text-sm font-medium text-gray-700">Receiving TDs</label>
                     <input type="number" name="receiving_tds" id="receiving_tds" 
-                           value="{{ old('receiving_tds', $stats->receiving_tds ?? '') }}"
+                           value="{{ old('receiving_tds', $player_stat->receiving_tds ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('receiving_tds')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -137,7 +137,7 @@
                 <div>
                     <label for="two_point_conversions" class="block text-sm font-medium text-gray-700">2-Point Conversions</label>
                     <input type="number" name="two_point_conversions" id="two_point_conversions" 
-                           value="{{ old('two_point_conversions', $stats->two_point_conversions ?? '') }}"
+                           value="{{ old('two_point_conversions', $player_stat->two_point_conversions ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('two_point_conversions')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -147,7 +147,7 @@
                 <div>
                     <label for="fumbles_lost" class="block text-sm font-medium text-gray-700">Fumbles Lost</label>
                     <input type="number" name="fumbles_lost" id="fumbles_lost" 
-                           value="{{ old('fumbles_lost', $stats->fumbles_lost ?? '') }}"
+                           value="{{ old('fumbles_lost', $player_stat->fumbles_lost ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('fumbles_lost')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -157,7 +157,7 @@
                 <div>
                     <label for="offensive_fumble_return_td" class="block text-sm font-medium text-gray-700">Offensive Fumble Return TD</label>
                     <input type="number" name="offensive_fumble_return_td" id="offensive_fumble_return_td" 
-                           value="{{ old('offensive_fumble_return_td', $stats->offensive_fumble_return_td ?? '') }}"
+                           value="{{ old('offensive_fumble_return_td', $player_stat->offensive_fumble_return_td ?? '') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     @error('offensive_fumble_return_td')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -171,6 +171,6 @@
 <div class="mt-6 flex items-center justify-end gap-x-6">
     <a href="{{ route('admin.player-stats.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
     <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-        {{ isset($stats) ? 'Update' : 'Create' }}
+        {{ isset($player_stat) ? 'Update' : 'Create' }}
     </button>
 </div>

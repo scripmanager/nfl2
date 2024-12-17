@@ -7,9 +7,9 @@
         </div>
     </x-slot>
 
-    <form action="{{ route('admin.player-stats.update', ['player_stat' => $playerStat]) }}" method="POST" class="bg-white p-6 rounded shadow">
+    <form action="{{ route('admin.player-stats.update', ['player_stat' => $player_stat]) }}" method="POST" class="bg-white p-6 rounded shadow">
         @csrf
         @method('PUT')
-        @include('admin.player-stats.partials.form', ['submit' => 'Update'])
+        @include('admin.player-stats.partials.form')
     </form>
 </x-admin-layout>

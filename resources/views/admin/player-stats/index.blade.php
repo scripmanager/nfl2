@@ -51,7 +51,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->fumbles_lost }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">{{ $stat->offensive_fumble_return_td }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <a href="{{ route('admin.player-stats.edit', $stat) }}"
+                                        <a href="{{ route('admin.player-stats.edit', ['player_stat' => $stat]) }}"
                                            class="text-blue-600 hover:text-blue-900 mr-4">Edit</a>
                                         <form action="{{ route('admin.player-stats.destroy', $stat) }}" method="POST" class="inline">
                                             @csrf
