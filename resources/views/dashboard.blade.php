@@ -71,7 +71,9 @@
                                     <span class="text-sm text-gray-600">
                                         Changes remaining: {{ $entry->changes_remaining }}
                                     </span>
-                                    <a href="{{ route('entries.roster', $entry) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"> Manage Roster</a>
+                                    <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
+                                        <a href="{{ route('entries.roster', $entry) }}" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative"> Manage Roster</a>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

@@ -36,12 +36,14 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a href="{{ route('admin.players.edit', $player) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                                <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
+                                    <a href="{{ route('admin.players.edit', $player) }}" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative">Edit</a>
                                     <form action="{{ route('admin.players.destroy', $player) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure?')">Delete</button>
+                                        <button type="submit" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative" onclick="return confirm('Are you sure?')">Delete</button>
                                     </form>
+                                </div>
                                 </td>
                             </tr>
                             @endforeach

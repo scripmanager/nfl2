@@ -15,15 +15,15 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-100 items-center">
-                        <th class="px-4 py-2">Name</th>
-                        <th class="px-4 py-2">Abbreviation</th>
-                        <th class="px-4 py-2">Playoff Team</th>
-                        <th class="px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white">
-                    @foreach ($teams as $team)
-                    <tr class="text-center">
+                                <th class="px-4 py-2">Name</th>
+                                <th class="px-4 py-2">Abbreviation</th>
+                                <th class="px-4 py-2">Playoff Team</th>
+                                <th class="px-4 py-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            @foreach ($teams as $team)
+                    <tr class="text-center odd:bg-gray-50 even:bg-white">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $team->name }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ $team->abbreviation }}</td>
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
@@ -32,12 +32,14 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap text-center border-b border-gray-200">
-                            <a href="{{ route('admin.teams.edit', $team) }}" class="text-blue-600 hover:text-blue-900 mr-4">Edit</a>
-                            <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                            <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
+                                <a href="{{ route('admin.teams.edit', $team) }}" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative">Edit</a>
+                                <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
