@@ -31,10 +31,7 @@ class StandingsController extends Controller
 
     public function weekly(Request $request, $week = null)
 {
-    // Convert week numbers to round names
     $weekToRound = array_flip($this->roundToWeek);
-    
-    // If no week specified, use Wild Card (week 1)
     $weekNumber = $week ?? 1;
     $round = $weekToRound[$weekNumber] ?? 'Wild Card';
 
@@ -48,12 +45,14 @@ class StandingsController extends Controller
     ])
     ->get()
     ->map(function($entry) {
-        $entry->weekly_points = $entry->players->sum(function($player) {
-            // Use the stats relationship and calculate points for each game
-            return $player->stats->sum(function($stat) {
-                return $player->calculateWeeklyScore($stat->game_id);
-            });
-        });
+        // Calculate weekly points for each entry
+        $weeklyPoints = 0;
+        foreach ($entry->players as $player) {
+            foreach ($player->stats as $stat) {
+                $weeklyPoints += $player->calculateWeeklyScore($stat->game_id);
+            }
+        }
+        $entry->weekly_points = $weeklyPoints;
         return $entry;
     })
     ->sortByDesc('weekly_points')

@@ -156,18 +156,18 @@ class="relative z-50">
         @endif
         </div>
             <!-- Roster Table -->
-    <div class=" bg-white border rounded-lg shadow">
-        <table class="min-w-full table-auto">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wildcard Points</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Divisional Points</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Conference Points</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Super Bowl Points</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Points</th>
-                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+            <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2">Position</th>
+                                <th class="px-4 py-2">Player Name</th>
+                                <th class="px-4 py-2">Wildcard Points</th>
+                                <th class="px-4 py-2">Divisional Points</th>
+                                <th class="px-4 py-2">Conference Points</th>
+                    <th class="px-4 py-2">Super Bowl Points</th>
+                    <th class="px-4 py-2">Total Points</th>
+                    <th class="px-4 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -184,7 +184,7 @@ class="relative z-50">
     ];
     return $positionOrder[$player->pivot->roster_position] ?? 999;
 }) as $player)
-                    <tr x-data="{ showDropdown: false, loading: false }">
+                    <tr class="text-center" x-data="{ showDropdown: false, loading: false }">
                         <td class="px-6 py-4 whitespace-nowrap capitalize">{{ $player->pivot->roster_position }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ $player->name }} ({{ $player->team->name }})
@@ -216,19 +216,19 @@ class="relative z-50">
 @if(isset($historicalPlayers) && $historicalPlayers->count() > 0)
     <div class="mt-8">
         <h3 class="text-xl font-semibold mb-4">Previously Rostered Players</h3>
-        <div class="overflow-x-auto bg-white border rounded-lg shadow">
-            <table class="min-w-full table-auto">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Points</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Removed Date</th>
+        <div class="p-6 bg-white border-b border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-100">
+                        <th class="px-4 py-2">Position</th>
+                        <th class="px-4 py-2">Player Name</th>
+                        <th class="px-4 py-2">Total Points</th>
+                        <th class="px-4 py-2">Removed Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($historicalPlayers as $player)
-                        <tr class="bg-gray-50">
+                        <tr class="text-center border-b border-gray-200">
                             <td class="px-6 py-4">{{ $player['roster_position'] }}</td>
                             <td class="px-6 py-4">{{ $player['name'] }}</td>
                             <td class="px-6 py-4">{{ number_format($player['total_points'], 1) }}</td>
