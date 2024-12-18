@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
@@ -119,7 +120,7 @@ class EntryController extends Controller
         }
 
         $entry->load(['players' => function($query) {
-            $query->with('team')->select('players.*');
+            $query->with('team')->with('stats')->select('players.*');
         }]);
 
         // Get players that are locked (game has started and still games to play this weekend (assumes games only sat & sundays, 48hr window) )
@@ -142,8 +143,24 @@ class EntryController extends Controller
         }
 
         // Calculate total points and points by position using ScoringService
+        $totalPoints=Entry::select('entries.id as id','players.name as name','teams.name as team')->leftJoin('entry_player', 'entries.id', '=', 'entry_player.entry_id')
+            ->leftJoin('players', 'entry_player.player_id', '=', 'players.id')
+            ->leftJoin('teams', 'players.team_id', '=', 'teams.id')
+            ->leftJoin('games',function($join) {
+                $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
+            })
+            ->leftJoin('player_stats',function($join) {
+                $join->on('players.id', '=', 'player_stats.player_id')
+                    ->on('games.id', '=', 'player_stats.game_id');
+            })->where('entries.id',$entry->id)->whereRaw('entry_player.created_at < games.kickoff')
+            ->where(function ($query) {
+                $query->whereNull('entry_player.removed_at')
+                    ->orWhereRaw('entry_player.removed_at > games.kickoff');
+            })
+            ->sum('player_stats.points');
+
         $scoringService = new ScoringService();
-        $totalPoints = $scoringService->calculateTotalPoints($entry->players->flatMap->stats);
+//        $totalPoints = $scoringService->calculateTotalPoints($entry->players->flatMap->stats);
         $pointsByPosition = $scoringService->calculatePointsByPosition($entry);
 
         // Get historical players
@@ -397,12 +414,12 @@ class EntryController extends Controller
         $entry->load(['players' => function($query) {
             $query->with('team')->select('players.*');
         }]);
-    
+
         // Calculate total points and points by position using ScoringService
         $scoringService = new ScoringService();
         $totalPoints = $scoringService->calculateTotalPoints($entry->players->flatMap->stats);
         $pointsByPosition = $scoringService->calculatePointsByPosition($entry);
-    
+
         return view('entries.public.roster', [
             'entry' => $entry->load('players.team', 'user'),
             'totalPoints' => $totalPoints,

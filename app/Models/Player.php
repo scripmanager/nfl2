@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Player extends Model
 {
@@ -34,7 +35,15 @@ class Player extends Model
         return $this->hasMany(PlayerStats::class);
     }
 
-    public function calculateWeeklyScore($gameId): float
+    public function getPoints($round)
+    {
+        $result=DB::table('games')->select('games.id','player_stats.points')
+            ->leftJoin('player_stats', 'games.id', '=', 'player_stats.game_id')
+            ->where('games.round',$round)->where('player_stats.player_id',$this->id)->first();
+        return($result->points??0);
+
+    }
+        public function calculateWeeklyScore($gameId): float
     {
         $stats = $this->stats()->where('game_id', $gameId)->first();
         if (!$stats) return 0;

@@ -106,7 +106,7 @@ class="relative z-50">
 </div>
 
 <!-- Full Width Points by Position Card -->
-<div class="mb-8">
+<div class="mb-8 hidden">
     <div class="px-6 py-4 bg-nfl-background border rounded-lg shadow">
         <h3 class="text-lg font-medium mb-4">Points by Position</h3>
         <div class="grid grid-cols-2 gap-8">
@@ -171,7 +171,7 @@ class="relative z-50">
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-            @foreach($entry->players->sortBy(function($player) {
+            @foreach($entry->current_players->sortBy(function($player) {
     $positionOrder = [
         'QB' => 1,
         'WR1' => 2,
@@ -183,19 +183,19 @@ class="relative z-50">
         'FLEX' => 8
     ];
     return $positionOrder[$player->pivot->roster_position] ?? 999;
-}) as $player)
-                    <tr class="text-center" x-data="{ showDropdown: false, loading: false }">
+})->sortBy('pivot.removed_at') as $player)
+                    <tr class="text-center {{!is_null($player->pivot->removed_at)?' bg-red-200':''}}" x-data="{ showDropdown: false, loading: false }">
                         <td class="px-6 py-4 whitespace-nowrap capitalize">{{ $player->pivot->roster_position }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ $player->name }} ({{ $player->team->name }})
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($player->pivot->wildcard_points, 1) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($player->pivot->divisional_points, 1) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($player->pivot->conference_points, 1) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($player->pivot->superbowl_points, 1) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($player->pivot->total_points, 1) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $entry->getPlayerPoints($player->id,'Wild Card') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ is_null($player->pivot->removed_at) ? $entry->getPlayerPoints($player->id,'Divisional'):'' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ is_null($player->pivot->removed_at) ? number_format($player->getPoints('Conference'), 1):''  }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ is_null($player->pivot->removed_at) ? number_format($player->getPoints('Super Bowl'), 1):''  }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ is_null($player->pivot->removed_at) ? number_format($player->pivot->total_points, 1):''  }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center relative">
-                            @if(!in_array($player->id, $lockedPlayers->pluck('id')->toArray()))
+                            @if(is_null($player->pivot->removed_at)&&!in_array($player->id, $lockedPlayers->pluck('id')->toArray()))
                                 <div>
                                     <livewire:player-selector
                                         :entry="$entry"
@@ -214,7 +214,7 @@ class="relative z-50">
         </div>
 <!-- After current roster table -->
 @if(isset($historicalPlayers) && $historicalPlayers->count() > 0)
-    <div class="mt-8">
+    <div class="mt-8 hidden">
         <h3 class="text-xl font-semibold mb-4">Previously Rostered Players</h3>
         <div class="p-6 bg-white border-b border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
