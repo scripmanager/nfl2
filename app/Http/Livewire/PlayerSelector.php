@@ -121,7 +121,10 @@ class PlayerSelector extends Component
                 $now = now();
 
                 //Update current player removed_at
-                $this->entry->players()->where('player_id', $this->currentPlayerId)->update(['removed_at' => $now]);
+                $this->entry->players()->newPivotStatement()
+                ->where('entry_id', $this->entry->id)
+                ->where('player_id', $this->currentPlayerId)
+                ->update(['removed_at' => $now]);
 
                 $this->entry->players()->attach($this->selectedPlayerId, [
                     'roster_position' => $this->rosterPosition

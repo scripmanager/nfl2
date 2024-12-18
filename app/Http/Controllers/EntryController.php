@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Entry;
 use App\Models\Player;
 use App\Models\Game;
-use App\Models\Transaction;
+use App\Models\Transaction; 
+use App\Models\EntryPlayer;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -118,7 +119,7 @@ class EntryController extends Controller
         if ($entry->user_id !== auth()->id()) {
             abort(403);
         }
-
+//        dd(EntryPlayer::select('removed_at')->get());
         $entry->load(['players' => function($query) {
             $query->with('team')->with('stats')->select('players.*');
         }]);

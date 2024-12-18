@@ -86,6 +86,7 @@ class Entry extends Model
         return $this->belongsToMany(Player::class, 'entry_player')
             ->using(EntryPlayer::class)
             ->withPivot('roster_position')
+            ->withPivot('removed_at')
             ->withTimestamps();
     }
 
