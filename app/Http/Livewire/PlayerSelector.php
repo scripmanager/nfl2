@@ -35,8 +35,14 @@ class PlayerSelector extends Component
         ->where('entry_id', $this->entry->id)
         ->pluck('player_id');
 
+
+    $playersOut = Player::query()->leftJoin('teams', 'players.team_id', '=', 'teams.id')->leftJoin('games',function($join) {
+        $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
+    })->whereRaw('(`games`.`winning_team_id` != `teams`.`id` AND `games`.`winning_team_id` != 0 AND `games`.`id` IS NOT NULL)')->groupBy('players.id')->pluck('players.id');
+
+
     // Create array of all excluded player IDs including current player
-    $excludedPlayerIds = $usedPlayerIds->merge($droppedPlayerIds)
+    $excludedPlayerIds = $usedPlayerIds->merge($droppedPlayerIds)->merge($playersOut)
         ->push($this->currentPlayerId)  // Add current player to excluded list
         ->unique()
         ->values();
@@ -87,7 +93,7 @@ class PlayerSelector extends Component
             return;
         }
 
-        if ($this->entry->changes_remaining <= 0) {
+        if ($this->entry->getChangesRemaining() <= 0) {
             $this->dispatch('showDialog', [
                 'type' => 'error',
                 'message' => 'No changes remaining'
@@ -157,14 +163,14 @@ class PlayerSelector extends Component
 //                    'roster_position' => $this->rosterPosition
 //                ]);
 //
-//                // Create single transaction record
-//                Transaction::create([
-//                    'entry_id' => $this->entry->id,
-//                    'dropped_player_id' => $this->currentPlayerId,
-//                    'added_player_id' => $this->selectedPlayerId,
-//                    'roster_position' => $this->rosterPosition,
-//                    'processed_at' => $now
-//                ]);
+                // Create single transaction record
+                Transaction::create([
+                    'entry_id' => $this->entry->id,
+                    'dropped_player_id' => $this->currentPlayerId,
+                    'added_player_id' => $this->selectedPlayerId,
+                    'roster_position' => $this->rosterPosition,
+                    'processed_at' => $now
+                ]);
 
                 //if any games started decrease changes remaining.   If no games started unlimited changes allowed.
                 if($gamesStarted = Game::where('kickoff', '<=', Carbon::now())->first()) {

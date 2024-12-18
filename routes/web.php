@@ -59,12 +59,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/entries', [EntryController::class, 'store'])->name('entries.store');
     Route::get('/entries/{entry}/roster', [EntryController::class, 'roster'])->name('entries.roster');
     Route::post('/entries/{entry}/add-player', [EntryController::class, 'addPlayer'])->name('entries.add-player');
+    Route::post('/entries/{entry}/revert-player', [EntryController::class, 'revertPlayer'])->name('entries.revert-player');
     Route::post('/entries/{entry}/transactions', [EntryController::class, 'processTransaction'])->name('entries.process-transaction');
+    Route::post('/entries/{entry}/swap-flex', [EntryController::class, 'swapWithFlex'])->name('entries.swap-flex');
 
     // Standings routes
     Route::get('/standings', [StandingsController::class, 'index'])->name('standings.index');
     Route::get('/standings/week/{week}', [StandingsController::class, 'weekly'])->name('standings.weekly');
-    
+
     // Public entry routes
     Route::get('/public-entries', [EntryController::class, 'publicIndex'])->name('entries.public');
     Route::get('/public-entries/{entry}', [EntryController::class, 'publicRoster'])->name('entries.public.roster');
@@ -81,13 +83,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
-    
+
     // Player Management
     Route::resource('players', PlayerController::class, ['as' => 'admin']);
-    
+
     // Game Management
     Route::resource('games', GameController::class, ['as' => 'admin']);
-    
+
     // Team Management
     Route::resource('teams', TeamController::class, ['as' => 'admin']);
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Entry;
 use App\Models\Player;
 use App\Models\Game;
-use App\Models\Transaction; 
+use App\Models\Transaction;
 use App\Models\EntryPlayer;
 use Closure;
 use Illuminate\Http\Request;
@@ -116,6 +116,7 @@ class EntryController extends Controller
 
     public function roster(Entry $entry)
     {
+
         if ($entry->user_id !== auth()->id()) {
             abort(403);
         }
@@ -177,8 +178,33 @@ class EntryController extends Controller
                 ];
             });
 
-        $playersActive = $entry->players->count();
-        $changesRemaining = $entry->changes_remaining;
+
+        //Get kickoff of new players game
+        $revokeableChanges=collect();
+        $transactions=$entry->transactions()->get();
+        $transactions = $transactions->map(function ($item) {
+            $item->revoke = true;
+            return $item;
+        });
+        foreach($transactions as $transaction) {
+            $revokeableChanges->push($transaction->dropped_player_id);
+            //If next game after transaction has started disable revoking
+            if($transaction->addedPlayer->games()->where('kickoff','>',$transaction->created_at)->count()>0 &&
+                $transaction->addedPlayer->games()->where('kickoff','>',$transaction->created_at)->first()->kickoff<now()){
+                $transaction->revoke=false;
+            }
+            //If player was dropped again disable revoking.
+            if($transactions->contains('dropped_player_id',$transaction->added_player_id)) {
+                $transaction->revoke=false;
+            }
+
+        }
+//dd($transactions);
+        $playersActive = $entry->current_players()->leftJoin('teams', 'players.team_id', '=', 'teams.id')->leftJoin('games',function($join) {
+            $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
+        })->whereRaw('(`games`.`winning_team_id` = `teams`.`id` OR `games`.`winning_team_id` = 0 OR `games`.`id` IS NULL)')->groupBy('players.id')->pluck('players.id');
+
+       $changesRemaining = $entry->getChangesRemaining();
 
         return view('entries.roster', [
             'entry' => $entry->load('players.team'),
@@ -188,10 +214,96 @@ class EntryController extends Controller
             'lockedPlayers' => $lockedPlayers,
             'historicalPlayers' => $historicalPlayers,
             'playersActive' => $playersActive,
-            'changesRemaining' => $changesRemaining
+            'changesRemaining' => $changesRemaining,
+            'transactions' => $transactions
         ]);
     }
 
+    public function revertPlayer(Request $request)
+    {
+        //TODO: verify user has auth to make these changes!
+        $transaction=Transaction::findOrFail($request->input('transaction_id'));
+        EntryPlayer::where('entry_id',$transaction->entry_id)->where('player_id',$transaction->dropped_player_id)->update(['removed_at' => NULL]);
+        EntryPlayer::where('entry_id',$transaction->entry_id)->where('player_id',$transaction->added_player_id)->delete();
+        $transaction->delete();
+        return redirect()->back()->with('success', 'Player change cancelled.');
+    }
+    public function swapWithFlex(Request $request, Entry $entry)
+    {
+        if ($entry->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'player1_id' => 'required|exists:players,id',
+            'player2_id' => 'required|exists:players,id',
+        ]);
+
+        // Get both players
+        $player1 = EntryPlayer::where('entry_id', $entry->id)
+            ->where('player_id', $validated['player1_id'])
+            ->whereNull('removed_at')
+            ->firstOrFail();
+
+        $player2 = EntryPlayer::where('entry_id', $entry->id)
+            ->where('player_id', $validated['player2_id'])
+            ->whereNull('removed_at')
+            ->firstOrFail();
+
+        // Verify one position is FLEX
+        if (!in_array('FLEX', [$player1->roster_position, $player2->roster_position])) {
+            return back()->withErrors(['message' => 'One position must be FLEX to swap']);
+        }
+
+        // Get the player details
+        $p1 = Player::findOrFail($validated['player1_id']);
+        $p2 = Player::findOrFail($validated['player2_id']);
+
+        // Verify the non-FLEX player can be placed in FLEX (RB/WR/TE only)
+        if ($player1->roster_position === 'FLEX') {
+            if (!in_array($p2->position, ['RB', 'WR', 'TE'])) {
+                return back()->withErrors(['message' => 'Only RB/WR/TE positions can be moved to FLEX']);
+            }
+        } else {
+            if (!in_array($p1->position, ['RB', 'WR', 'TE'])) {
+                return back()->withErrors(['message' => 'Only RB/WR/TE positions can be moved to FLEX']);
+            }
+        }
+
+        // Check if either player is locked
+        $lockedPlayers = collect();
+        if($upcomingGames = Game::where('kickoff', '>=', now())
+            ->where('kickoff', '<=', now()->addDays(2))
+            ->first()) {
+            foreach ([$p1, $p2] as $player) {
+                $currentGame = Game::where(function ($query) use ($player) {
+                    $query->where('home_team_id', $player->team_id)
+                        ->orWhere('away_team_id', $player->team_id);
+                })
+                    ->where('kickoff', '<=', now())
+                    ->where('kickoff', '>=', now()->subDays(2))
+                    ->first();
+
+                if ($currentGame) {
+                    $lockedPlayers->push($player);
+                }
+            }
+        }
+
+        if ($lockedPlayers->count() > 0) {
+            return back()->withErrors(['message' => 'Cannot swap locked players']);
+        }
+
+        // Perform the swap
+        $temp = $player1->roster_position;
+        $player1->roster_position = $player2->roster_position;
+        $player2->roster_position = $temp;
+
+        $player1->save();
+        $player2->save();
+
+        return back()->with('success', 'Positions successfully swapped');
+    }
     public function store(Request $request)
     {
         $user = auth()->user();
