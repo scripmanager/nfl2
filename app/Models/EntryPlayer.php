@@ -10,6 +10,14 @@ class EntryPlayer extends Pivot
 {
     protected $table = 'entry_player';
 
+    public $timestamps = true;
+
+    protected $dates = [
+        'removed_at',
+        'created_at',
+        'updated_at'
+    ];
+
     protected $fillable = [
         'entry_id',
         'player_id',
@@ -18,18 +26,14 @@ class EntryPlayer extends Pivot
         'divisional_points',
         'conference_points',
         'superbowl_points',
-        'total_points'
+        'total_points',
+        'removed_at'
     ];
 
-    public static function boot()
+    public function markAsRemoved()
     {
-        parent::boot();
-
-        static::deleting(function ($pivot) {
-            // Log the event for debugging
-            \Log::info('Pivot deleting', ['pivot' => $pivot]);
-            return true; // Allow the delete to proceed
-        });
+        $this->removed_at = now();
+        $this->save();
     }
 
     public function player(): BelongsTo
