@@ -212,24 +212,14 @@ class="relative z-50">
             </tbody>
         </table>
         </div>
-<!-- Add this right before the historical players section -->
-@php
-    $historicalPlayers = DB::table('entry_player')
-        ->join('players', 'entry_player.player_id', '=', 'players.id')
-        ->join('teams', 'players.team_id', '=', 'teams.id')
-        ->where('entry_player.entry_id', $entry->id)
-        ->whereNotNull('entry_player.removed_at')
-        ->select('entry_player.*', 'players.name', 'teams.name as team_name')
-        ->get();
-@endphp
-
-@if($historicalPlayers->count() > 0)
-    <div class="mt-8">
+<!-- After current roster table -->
+@if(isset($historicalPlayers) && $historicalPlayers->count() > 0)
+    <div class="mt-8 hidden">
         <h3 class="text-xl font-semibold mb-4">Previously Rostered Players</h3>
         <div class="p-6 bg-white border-b border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr class="bg-gray-100">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-100">
                         <th class="px-4 py-2">Position</th>
                         <th class="px-4 py-2">Player Name</th>
                         <th class="px-4 py-2">Total Points</th>
@@ -239,10 +229,10 @@ class="relative z-50">
                 <tbody>
                     @foreach($historicalPlayers as $player)
                         <tr class="text-center border-b border-gray-200">
-                            <td class="px-6 py-4">{{ $player->roster_position }}</td>
-                            <td class="px-6 py-4">{{ $player->name }} ({{ $player->team_name }})</td>
-                            <td class="px-6 py-4">{{ number_format($player->total_points ?? 0, 1) }}</td>
-                            <td class="px-6 py-4">{{ Carbon\Carbon::parse($player->removed_at)->format('M d, Y') }}</td>
+                            <td class="px-6 py-4">{{ $player['roster_position'] }}</td>
+                            <td class="px-6 py-4">{{ $player['name'] }}</td>
+                            <td class="px-6 py-4">{{ number_format($player['total_points'], 1) }}</td>
+                            <td class="px-6 py-4">{{ Carbon\Carbon::parse($player['removed_at'])->format('M d, Y') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

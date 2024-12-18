@@ -69,10 +69,11 @@ class Entry extends Model
     }
     public function current_players(): BelongsToMany
     {
+        //->whereNull('entry_player.removed_at')
         return $this->belongsToMany(Player::class, 'entry_player')
             ->using(EntryPlayer::class)
-            ->withPivot(['roster_position', 'removed_at', 'wildcard_points', 'divisional_points', 'conference_points', 'superbowl_points', 'total_points'])
-            ->whereNull('entry_player.removed_at')
+            ->withPivot('roster_position')
+            ->withPivot('removed_at')
             ->withTimestamps();
     }
     public function playerlist()
@@ -84,10 +85,10 @@ class Entry extends Model
     {
         return $this->belongsToMany(Player::class, 'entry_player')
             ->using(EntryPlayer::class)
-            ->withPivot('roster_position', 'removed_at')  // Add removed_at here
+            ->withPivot('roster_position')
             ->withTimestamps();
     }
-    
+
     protected static function boot()
     {
         parent::boot();
