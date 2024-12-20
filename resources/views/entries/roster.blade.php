@@ -129,8 +129,13 @@
                         <td class="px-6 py-4 whitespace-nowrap  text-left">
                             <span class="font-semibold">{{ $player->name }}</span> <span class="text-sm text-gray-500 block">{{ $player->team->name }}</span>
                             @if(!is_null($player->pivot->removed_at))
-                                <span class="block text-xs">Added: {{$transactions->firstWhere('dropped_player_id',$player->id)->addedPlayer->name}} ({{$transactions->firstWhere('dropped_player_id',$player->id)->created_at->format('m/d/Y g:i a')}})</span>
-                            @endif
+    @php
+        $transaction = $transactions->firstWhere('dropped_player_id', $player->id);
+    @endphp
+    @if($transaction && $transaction->addedPlayer)
+        <span class="block text-xs">Added: {{$transaction->addedPlayer->name}} ({{$transaction->created_at->format('m/d/Y g:i a')}})</span>
+    @endif
+@endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ number_format($entry->getPlayerPoints($player->id,'Wild Card'), 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ !is_null($player->getPoints('Divisional'))&&is_null($player->pivot->removed_at) ? number_format($entry->getPlayerPoints($player->id,'Divisional'), 2):'' }}</td>
@@ -166,17 +171,21 @@
                             @elseif(is_null($player->pivot->removed_at))
                                 <span class="text-red-500">Locked</span>
                             @else
-                                @if($transactions->firstWhere('dropped_player_id',$player->id)->revoke===true)
-                                <form method="POST" action="{{ route('entries.revert-player', $entry) }}">
-                                    <input type="hidden" id="transaction_id" name="transaction_id" value="{{$transactions->firstWhere('dropped_player_id',$player->id)->id}}" />
-                                    @csrf
-
-                                    <button type="submit"
-                                            class="px-3 py-1 cursor-pointer text-sm text-white bg-red-600 rounded">
-                                        Cancel Change
-                                    </button>
-                                </form>
-                                    @endif
+                            @if(!is_null($player->pivot->removed_at))
+    @php
+        $transaction = $transactions->firstWhere('dropped_player_id', $player->id);
+    @endphp
+    @if($transaction && ($transaction->revoke ?? false))
+        <form method="POST" action="{{ route('entries.revert-player', $entry) }}">
+            <input type="hidden" id="transaction_id" name="transaction_id" value="{{$transaction->id}}" />
+            @csrf
+            <button type="submit"
+                    class="px-3 py-1 cursor-pointer text-sm text-white bg-red-600 rounded">
+                Cancel Change
+            </button>
+        </form>
+    @endif
+@endif
 
                             @endif
 
