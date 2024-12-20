@@ -44,7 +44,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($transactions as $transaction)
-                                    <tr class="text-center odd:bg-gray-100 even:bg-white">
+                                    <tr class="text-center odd:bg-gray-50 even:bg-white">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             {{ $transaction->created_at->format('M j, Y g:ia') }}
                                         </td>

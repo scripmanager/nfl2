@@ -36,7 +36,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200 text-center">
                             @foreach($entries as $index => $entry)
-                                <tr class="text-center odd:bg-gray-100 even:bg-white">
+                                <tr class="text-center odd:bg-gray-50 even:bg-white">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
                                         {{ $index + 1 }}
                                     </td>
