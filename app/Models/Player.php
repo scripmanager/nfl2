@@ -69,8 +69,15 @@ class Player extends Model
         return $this->hasMany(PlayerStats::class);
     }
 
-    public function getPoints($round)
+    public function getPoints($round=null)
     {
+        if($round === null)
+        {
+            $result=DB::table('games')->select('games.id','player_stats.points')
+                ->leftJoin('player_stats', 'games.id', '=', 'player_stats.game_id')->where('player_stats.player_id',$this->id)->first();
+            return($result->points??0);
+
+        }
         if(Game::where('round', $round)->where('kickoff','<',now())->first())
         {
             $result=DB::table('games')->select('games.id','player_stats.points')
@@ -79,7 +86,6 @@ class Player extends Model
             return($result->points??0);
         }
         return null;
-
     }
         public function calculateWeeklyScore($gameId): float
     {

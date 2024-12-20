@@ -36,6 +36,7 @@ class Entry extends Model
         return $this->hasMany(PlayerChangeHistory::class);
     }
 
+    //$entry->total_points
     public function getTotalPointsAttribute()
     {
         return($this->select('entries.id as id','players.name as name','teams.name as team')->leftJoin('entry_player', 'entries.id', '=', 'entry_player.entry_id')

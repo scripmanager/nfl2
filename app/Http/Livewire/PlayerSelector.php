@@ -108,7 +108,7 @@ class PlayerSelector extends Component
         $selectedPlayer = Player::find($this->selectedPlayerId);
 
         // Get count of players from the same team as the selected player
-        $sameTeamCount = $this->entry->players()
+        $sameTeamCount = $this->entry->current_players()
             ->where('team_id', $selectedPlayer->team_id)
             ->where('players.id', '!=', $this->currentPlayerId)
             ->count();

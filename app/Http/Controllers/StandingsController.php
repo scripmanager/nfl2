@@ -20,7 +20,7 @@ class StandingsController extends Controller
         $entries = Entry::with(['players', 'user'])
                     ->get()
                     ->sortByDesc(function($entry) {
-                        return $entry->players->sum('pivot.total_points');
+                        return $entry->total_points;
                     });
 
         return view('standings.index', [
@@ -40,7 +40,7 @@ class StandingsController extends Controller
             $query->whereHas('game', function($q) use ($round) {
                 $q->where('round', $round);
             });
-        }, 
+        },
         'user'
     ])
     ->get()

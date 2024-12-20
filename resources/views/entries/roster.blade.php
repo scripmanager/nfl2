@@ -129,7 +129,7 @@
                         <td class="px-6 py-4 whitespace-nowrap  text-left">
                             <span class="font-semibold">{{ $player->name }}</span> <span class="text-sm text-gray-500 block">{{ $player->team->name }}</span>
                             @if(!is_null($player->pivot->removed_at))
-                                <span class="block text-xs">Added: {{$transactions->firstWhere('dropped_player_id',$player->id)->addedPlayer->name}} ({{$transactions->firstWhere('dropped_player_id',$player->id)->created_at->format('m/d/Y g:i a')}})</span>
+                                <span class="block text-xs">Added: {{$transactions->firstWhere('dropped_player_id',$player->id)->addedPlayer->name ?? ''}} ({{$transactions->firstWhere('dropped_player_id',$player->id)&&$transactions->firstWhere('dropped_player_id',$player->id)->created_at->format('m/d/Y g:i a')??''}})</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ number_format($entry->getPlayerPoints($player->id,'Wild Card'), 2) }}</td>
@@ -166,9 +166,9 @@
                             @elseif(is_null($player->pivot->removed_at))
                                 <span class="text-red-500">Locked</span>
                             @else
-                                @if($transactions->firstWhere('dropped_player_id',$player->id)->revoke===true)
+                                @if($transactions->firstWhere('dropped_player_id',$player->id)&&$transactions->firstWhere('dropped_player_id',$player->id)->revoke===true)
                                 <form method="POST" action="{{ route('entries.revert-player', $entry) }}">
-                                    <input type="hidden" id="transaction_id" name="transaction_id" value="{{$transactions->firstWhere('dropped_player_id',$player->id)->id}}" />
+                                    <input type="hidden" id="transaction_id" name="transaction_id" value="{{$transactions->firstWhere('dropped_player_id',$player->id)&&$transactions->firstWhere('dropped_player_id',$player->id)->id}}" />
                                     @csrf
 
                                     <button type="submit"
