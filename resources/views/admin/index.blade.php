@@ -35,7 +35,7 @@
             <!-- Games -->
             <a href="{{ route('admin.games.index') }}" 
                class="block p-8 bg-blue-500 hover:bg-blue-600 rounded-lg relative overflow-hidden">
-                <div class="text-xl font-bold text-white mb-2">Games</div>
+                <div class="mt-6">Games</div>
                 <div class="text-sm text-blue-100">Manage games and stats</div>
             </a>
             

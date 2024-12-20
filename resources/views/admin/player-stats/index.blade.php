@@ -6,7 +6,7 @@
                 {{ __('Player Stats') }}
             </h2>
             <a href="{{ route('admin.player-stats.create') }}"
-               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+               class="bg-nfl-primary hover:bg-nfl-secondary text-white font-bold py-2 px-4 rounded">
                 Add New Player Stat
             </a>
         </div>
@@ -56,12 +56,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <div class="inline-flex -space-x-px overflow-hidden rounded-md border bg-nfl-primary shadow-sm">
                                         <a href="{{ route('admin.player-stats.edit', ['player_stat' => $stat]) }}"
-                                           class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative">Edit</a>
+                                           class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-nfl-secondary focus:relative">Edit</a>
                                         <form action="{{ route('admin.player-stats.destroy', $stat) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:relative"
+                                                    class="inline-block px-4 py-2 text-sm font-medium text-white hover:bg-nfl-secondary focus:relative"
                                                     onclick="return confirm('Are you sure?')">
                                                 Delete
                                             </button>

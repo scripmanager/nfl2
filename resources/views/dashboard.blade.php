@@ -20,7 +20,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Overview Section -->
             <x-card >
-                <div class="grid md:grid-cols-3 gap-4">
+                <div class="grid md:grid-cols-2 gap-4">
                     <div class="bg-nfl-primary border border-nfl-primary/20 p-4 rounded-lg">
                         <div class="text-lg font-semibold text-white mb-4">Total Entries</div>
                         <div class="text-3xl font-bold text-white">{{ $entriesCount }} / 4</div>
@@ -39,12 +39,6 @@
                             @else
                                 0 pts
                             @endif
-                        </div>
-                    </div>
-                    <div class="bg-nfl-accent border border-nfl-accent/20 p-4 rounded-lg">
-                        <div class="text-lg font-semibold text-white mb-4">Changes Remaining</div>
-                        <div class="text-3xl font-bold text-white">
-                            This does not make sense here.
                         </div>
                     </div>
                 </div>
@@ -69,7 +63,7 @@
                             <div class="border rounded-lg p-4">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="text-xl font-semibold">{{ $entry->entry_name }}</h3>
-                                    <span class="text-xl font-bold">{{ $entry->total_points ?? 0 }}<span class="ml-0.5 text-gray-400 text-base font-extralight">pts</span></span>
+                                    <span class="text-xl font-bold">{{ $entry->total_points ?? 0 }}<span class="ml-0.5 text-gray-400 text-base font-extralight"> pts</span></span>
                                 </div>
 
                                 <div class="space-y-2">
@@ -127,7 +121,7 @@
                         <div class="bg-white p-4 rounded-lg shadow">
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-xl font-semibold">{{ $entry->entry_name }}</h4>
-                                <span class="text-lg font-bold">{{ $entry->total_points ?? 0 }}<span class="block leading-3 text-gray-400 text-sm font-extralight text-center">Points</span></span>
+                                <span class="text-lg font-bold">{{ $entry->total_points ?? 0 }}<span class="ml-0.5 text-gray-400 text-base font-extralight"> pts</span></span>
                             </div>
                             <div class="space-y-2">
 {{--                                @foreach($entry->weekly_points as $week => $points)--}}
