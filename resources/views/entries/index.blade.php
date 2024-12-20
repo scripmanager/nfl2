@@ -16,7 +16,7 @@
                         </a>
                     @endif
 
-                    <div class="mt-6">
+                    <div class="mt-6 grid md:grid-cols-2 gap-4">
                         @foreach($entries as $entry)
                             <div class="p-4 mb-4 border rounded">
                                 <h3 class="text-lg font-semibold">{{ $entry->entry_name }}</h3>
