@@ -19,7 +19,7 @@
     <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Overview Section -->
-            <x-card >
+            <x-card title="Overview">
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="bg-nfl-primary border border-nfl-primary/20 p-4 rounded-lg">
                         <div class="text-lg font-semibold text-white mb-4">Total Entries</div>
@@ -41,6 +41,7 @@
                             @endif
                         </div>
                     </div>
+
                 </div>
             </x-card>
 

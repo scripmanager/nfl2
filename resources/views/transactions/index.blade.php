@@ -24,7 +24,7 @@
                                 </select>
                             </div>
                             <div class="self-end">
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button type="submit" class="bg-nfl-primary hover:bg-nfl-secondary text-white font-bold py-2 px-4 rounded">
                                     Filter
                                 </button>
                             </div>
@@ -44,7 +44,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($transactions as $transaction)
-                                    <tr class="text-center">
+                                    <tr class="text-center odd:bg-gray-100 even:bg-white">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             {{ $transaction->created_at->format('M j, Y g:ia') }}
                                         </td>

@@ -19,7 +19,7 @@
 >
     <button
         @click="showDropdown = !showDropdown"
-        class="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
+        class="px-3 py-1 text-sm text-white bg-nfl-primary rounded hover:bg-nfl-secondary">
         Change Player
     </button>
 
@@ -102,7 +102,7 @@
                     </button>
                     <button
                         type="submit"
-                        class="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600">
+                        class="px-3 py-1 text-sm text-white bg-nfl-primary hover:bg-nfl-secondary rounded">
                         Confirm Change
                     </button>
                 </div>

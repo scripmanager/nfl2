@@ -31,7 +31,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($entries as $index => $entry)
-                                    <tr>
+                                    <tr class="text-center odd:bg-gray-100 even:bg-white">
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
                                             {{ $index + 1 }}
                                         </td>
@@ -44,7 +44,7 @@
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->getPointsByRound('Super Bowl'), 1) }}</td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->total_points, 1) }}</td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                            <x-secondary-button class="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-1 py-1 rounded" onclick="window.location.href='{{ route('entries.public.roster', $entry) }}'">
+                                            <x-secondary-button class="ml-3 bg-nfl-primary text-white hover:bg-nfl-secondary px-1 py-1 rounded" onclick="window.location.href='{{ route('entries.public.roster', $entry) }}'">
                                                 View Roster
                                             </x-secondary-button>
                                         </td>

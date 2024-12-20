@@ -22,22 +22,19 @@
 <!-- Top Row Summary Cards -->
 <div class="grid grid-cols-3 gap-6 mb-8">
     <!-- Total Points Card -->
-    <div class="px-4 py-6 bg-nfl-background border rounded-lg shadow flex items-center justify-between">
-        <h3 class="text-lg font-medium">Total Points</h3>
+    <x-card title="Total Points">
         <p class="mt-2 text-2xl font-bold">{{ $entry->total_points }}</p>
-    </div>
+    </x-card>
 
     <!-- Changes Remaining Card -->
-    <div class="px-4 py-6 bg-nfl-background border rounded-lg shadow flex items-center justify-between">
-        <h3 class="text-lg font-medium">Changes Remaining</h3>
+<x-card title="Changes Remaining">
         <p class="mt-2 text-2xl font-bold">{{ $entry->getChangesRemaining() }} / 2</p>
-    </div>
+</x-card>   
 
     <!-- Players Active Card -->
-    <div class="px-4 py-6 bg-nfl-background border rounded-lg shadow flex items-center justify-between">
-        <h3 class="text-lg font-medium">Players Active</h3>
+       <x-card title="Players Active">
         <p class="mt-2 text-2xl font-bold">{{ $playersActive->count() }} / 8</p>
-    </div>
+</x-card>   
 </div>
 
 <!-- Full Width Points by Position Card -->
@@ -129,13 +126,13 @@
                         <td class="px-6 py-4 whitespace-nowrap  text-left">
                             <span class="font-semibold">{{ $player->name }}</span> <span class="text-sm text-gray-500 block">{{ $player->team->name }}</span>
                             @if(!is_null($player->pivot->removed_at))
-    @php
-        $transaction = $transactions->firstWhere('dropped_player_id', $player->id);
-    @endphp
-    @if($transaction && $transaction->addedPlayer)
-        <span class="block text-xs">Added: {{$transaction->addedPlayer->name}} ({{$transaction->created_at->format('m/d/Y g:i a')}})</span>
-    @endif
-@endif
+                               @php
+                                   $transaction = $transactions->firstWhere('dropped_player_id', $player->id);
+                               @endphp
+                                   @if($transaction && $transaction->addedPlayer)
+                                        <span class="block text-xs">Added: {{$transaction->addedPlayer->name}} ({{$transaction->created_at->format('m/d/Y g:i a')}})</span>
+                                   @endif
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ number_format($entry->getPlayerPoints($player->id,'Wild Card'), 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ !is_null($player->getPoints('Divisional'))&&is_null($player->pivot->removed_at) ? number_format($entry->getPlayerPoints($player->id,'Divisional'), 2):'' }}</td>
@@ -146,7 +143,7 @@
                             @if(is_null($player->pivot->removed_at)&&!in_array($player->id, $lockedPlayers->pluck('id')->toArray()))
                                 @if($changesRemaining<=0)
                                     <button type="button" disabled
-                                            class="px-3 py-1 cursor-not-allowed text-sm text-white bg-blue-300 rounded">
+                                            class="px-3 py-1 cursor-not-allowed text-sm text-white bg-nfl-primary hover:bg-nfl-secondary rounded">
                                         Change Player
                                     </button>
                                 @else
@@ -180,7 +177,7 @@
             <input type="hidden" id="transaction_id" name="transaction_id" value="{{$transaction->id}}" />
             @csrf
             <button type="submit"
-                    class="px-3 py-1 cursor-pointer text-sm text-white bg-red-600 rounded">
+                    class="px-3 py-1 cursor-pointer text-sm text-white bg-nfl-primary hover:bg-nfl-secondary rounded">
                 Cancel Change
             </button>
         </form>
