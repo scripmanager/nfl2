@@ -25,8 +25,11 @@ class EntryController extends Controller
             ->with(['players'])
             ->get();
 
+        $gamesStarted=Game::where('kickoff', '<=', Carbon::now())->count();
+
         return view('entries.index', [
-            'entries' => $entries
+            'entries' => $entries,
+            'gamesStarted' => $gamesStarted
         ]);
     }
 
@@ -106,6 +109,10 @@ class EntryController extends Controller
 
     public function create()
     {
+        $gamesStarted=Game::where('kickoff', '<=', Carbon::now())->count();
+        if($gamesStarted>0){
+            return redirect()->route('dashboard')->with('error', 'Entry deadline passed!');
+        }
         $players = Player::with('team')
         ->where('is_active', true)
         ->get()
@@ -116,26 +123,26 @@ class EntryController extends Controller
 
     public function roster(Entry $entry)
     {
-
         if ($entry->user_id !== auth()->id()) {
             abort(403);
         }
-//        dd(EntryPlayer::select('removed_at')->get());
         $entry->load(['players' => function($query) {
             $query->with('team')->with('stats')->select('players.*');
         }]);
 
-        // Get players that are locked (game has started and still games to play this weekend (assumes games only sat & sundays, 48hr window) )
+        // Get players that are locked (game has started and still games to play this weekend (assumes games only sat & sundays & mon, 72hr window) )
 
-        //Are there upcoming games (<48hrs) then check for locking players. This will unlock all players once the last games end sunday evening.
+        //Are there upcoming games (<72hrs) then check for locking players. This will unlock all players once the last games end sunday evening.
         $lockedPlayers = collect();
-        if($upcomingGames = Game::where('kickoff', '>=', Carbon::now())->where('kickoff', '<=', Carbon::now()->addDays(2)->toDateTimeString())->first()) {
+
+        if($upcomingGames = Game::where('kickoff', '<=', Carbon::now()->addDay(3)->toDateTimeString())
+            ->where('kickoff', '>=', Carbon::now()->subHours(5)->toDateTimeString())->first()) {
             foreach ($entry->players as $player) {
                 $currentGame = Game::where(function ($query) use ($player) {
                     $query->where('home_team_id', $player->team_id)
                         ->orWhere('away_team_id', $player->team_id);
                 })
-                    ->where('kickoff', '<=', Carbon::now())->where('kickoff', '>=', Carbon::now()->subDays(2)->toDateTimeString())
+                    ->where('kickoff', '<=', Carbon::now())->where('kickoff', '>=', Carbon::now()->subDays(3)->toDateTimeString())
                     ->first();
 
                 if ($currentGame) {
@@ -199,7 +206,7 @@ class EntryController extends Controller
             }
 
         }
-//dd($transactions);
+//dd($entry->active_players()->pluck('players.id'));
         $playersActive = $entry->current_players()->leftJoin('teams', 'players.team_id', '=', 'teams.id')->leftJoin('games',function($join) {
             $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
         })->whereRaw('(`games`.`winning_team_id` = `teams`.`id` OR `games`.`winning_team_id` = 0 OR `games`.`id` IS NULL)')->groupBy('players.id')->pluck('players.id');
@@ -228,82 +235,7 @@ class EntryController extends Controller
         $transaction->delete();
         return redirect()->back()->with('success', 'Player change cancelled.');
     }
-    public function swapWithFlex(Request $request, Entry $entry)
-    {
-        if ($entry->user_id !== auth()->id()) {
-            abort(403);
-        }
 
-        $validated = $request->validate([
-            'player1_id' => 'required|exists:players,id',
-            'player2_id' => 'required|exists:players,id',
-        ]);
-
-        // Get both players
-        $player1 = EntryPlayer::where('entry_id', $entry->id)
-            ->where('player_id', $validated['player1_id'])
-            ->whereNull('removed_at')
-            ->firstOrFail();
-
-        $player2 = EntryPlayer::where('entry_id', $entry->id)
-            ->where('player_id', $validated['player2_id'])
-            ->whereNull('removed_at')
-            ->firstOrFail();
-
-        // Verify one position is FLEX
-        if (!in_array('FLEX', [$player1->roster_position, $player2->roster_position])) {
-            return back()->withErrors(['message' => 'One position must be FLEX to swap']);
-        }
-
-        // Get the player details
-        $p1 = Player::findOrFail($validated['player1_id']);
-        $p2 = Player::findOrFail($validated['player2_id']);
-
-        // Verify the non-FLEX player can be placed in FLEX (RB/WR/TE only)
-        if ($player1->roster_position === 'FLEX') {
-            if (!in_array($p2->position, ['RB', 'WR', 'TE'])) {
-                return back()->withErrors(['message' => 'Only RB/WR/TE positions can be moved to FLEX']);
-            }
-        } else {
-            if (!in_array($p1->position, ['RB', 'WR', 'TE'])) {
-                return back()->withErrors(['message' => 'Only RB/WR/TE positions can be moved to FLEX']);
-            }
-        }
-
-        // Check if either player is locked
-        $lockedPlayers = collect();
-        if($upcomingGames = Game::where('kickoff', '>=', now())
-            ->where('kickoff', '<=', now()->addDays(2))
-            ->first()) {
-            foreach ([$p1, $p2] as $player) {
-                $currentGame = Game::where(function ($query) use ($player) {
-                    $query->where('home_team_id', $player->team_id)
-                        ->orWhere('away_team_id', $player->team_id);
-                })
-                    ->where('kickoff', '<=', now())
-                    ->where('kickoff', '>=', now()->subDays(2))
-                    ->first();
-
-                if ($currentGame) {
-                    $lockedPlayers->push($player);
-                }
-            }
-        }
-
-        if ($lockedPlayers->count() > 0) {
-            return back()->withErrors(['message' => 'Cannot swap locked players']);
-        }
-
-        // Perform the swap
-        $temp = $player1->roster_position;
-        $player1->roster_position = $player2->roster_position;
-        $player2->roster_position = $temp;
-
-        $player1->save();
-        $player2->save();
-
-        return back()->with('success', 'Positions successfully swapped');
-    }
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -311,7 +243,10 @@ class EntryController extends Controller
         if ($user->entries()->count() >= 4) {
             return back()->withErrors(['message' => 'You cannot create more than 4 entries.']);
         }
-
+        $gamesStarted=Game::where('kickoff', '<=', Carbon::now())->count();
+        if($gamesStarted>0){
+            return redirect()->route('dashboard')->with('error', 'Entry deadline passed!');
+        }
 
         $validator = Validator::make($request->all(), [
             'entry_name' => 'required|string|max:255',
@@ -424,68 +359,6 @@ class EntryController extends Controller
         }
     }
 
-    public function processTransaction(Request $request, Entry $entry)
-{
-    if ($entry->user_id !== auth()->id()) {
-        abort(403);
-    }
-
-    $validated = $request->validate([
-        'dropped_player_id' => 'required|exists:players,id',
-        'added_player_id' => 'required|exists:players,id',
-        'position' => 'required|string'
-    ]);
-
-    if ($entry->changes_remaining <= 0) {
-        throw ValidationException::withMessages([
-            'transaction' => ['No roster changes remaining for this entry.']
-        ]);
-    }
-
-    try {
-        DB::beginTransaction();
-
-        // First, save the history record for the dropped player with correct defaults
-        DB::table('entry_player_history')->insert([
-            'entry_id' => $entry->id,
-            'player_id' => $validated['dropped_player_id'],
-            'roster_position' => $validated['position'],
-            'wildcard_points' => 0.0,
-            'divisional_points' => 0.0,
-            'conference_points' => 0.0,
-            'superbowl_points' => 0.0,
-            'total_points' => 0.0,
-            'removed_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        // Now handle the player swap
-        $entry->players()->detach($validated['dropped_player_id']);
-        $entry->players()->attach($validated['added_player_id'], [
-            'roster_position' => $validated['position']
-        ]);
-
-        // Create the transaction record
-        Transaction::create([
-            'entry_id' => $entry->id,
-            'dropped_player_id' => $validated['dropped_player_id'],
-            'added_player_id' => $validated['added_player_id'],
-            'roster_position' => $validated['position'],
-            'processed_at' => now()
-        ]);
-
-        // Decrement changes remaining
-        $entry->decrement('changes_remaining');
-
-        DB::commit();
-        return redirect()->back()->with('success', 'Player changed successfully');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Failed to change player: ' . $e->getMessage());
-    }
-}
-
     private function validateRosterComposition(Entry $entry, string $newPosition, ?string $removedPosition = null)
     {
         $positions = $entry->players()
@@ -524,7 +397,7 @@ class EntryController extends Controller
 
     public function publicRoster(Entry $entry)
     {
-        $entry->load(['players' => function($query) {
+        $entry->load(['current_players' => function($query) {
             $query->with('team')->select('players.*');
         }]);
 
