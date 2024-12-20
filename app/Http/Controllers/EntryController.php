@@ -135,7 +135,8 @@ class EntryController extends Controller
         //Are there upcoming games (<72hrs) then check for locking players. This will unlock all players once the last games end sunday evening.
         $lockedPlayers = collect();
 
-        if($upcomingGames = Game::where('kickoff', '<=', Carbon::now()->addDay(3)->toDateTimeString())->where('kickoff', '>=', Carbon::now()->subHours(5)->toDateTimeString())->first()) {
+        if($upcomingGames = Game::where('kickoff', '<=', Carbon::now()->addDay(3)->toDateTimeString())
+            ->where('kickoff', '>=', Carbon::now()->subHours(5)->toDateTimeString())->first()) {
             foreach ($entry->players as $player) {
                 $currentGame = Game::where(function ($query) use ($player) {
                     $query->where('home_team_id', $player->team_id)

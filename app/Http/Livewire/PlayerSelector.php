@@ -24,58 +24,61 @@ class PlayerSelector extends Component
     }
 
     public function loadEligiblePlayers()
-{
-    // Get already used players for this entry
-    $usedPlayerIds = $this->entry->players()
-        ->where('players.id', '!=', $this->currentPlayerId)
-        ->pluck('players.id');
+    {
+        // Get already used players for this entry
+        $usedPlayerIds = $this->entry->players()
+            ->where('players.id', '!=', $this->currentPlayerId)
+            ->pluck('players.id');
 
-    // Get previously dropped players from entry_player
-    $droppedPlayerIds = DB::table('entry_player')
-        ->where('entry_id', $this->entry->id)
-        ->whereNotNull('removed_at')
-        ->pluck('player_id');
+        //players who've already lost a game and are out
+        $playersOut = Player::query()->leftJoin('teams', 'players.team_id', '=', 'teams.id')
+            ->leftJoin('games',function($join) {
+                $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
+             })->whereRaw('(`games`.`winning_team_id` != `teams`.`id` AND `games`.`winning_team_id` != 0 AND `games`.`id` IS NOT NULL)')
+            ->groupBy('players.id')->pluck('players.id');
 
+        //players who have already played this weekend
+        $playersAlreadyPlayed = Player::query()->leftJoin('teams', 'players.team_id', '=', 'teams.id')
+            ->leftJoin('games',function($join) {
+                $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
+            })->where('games.kickoff', '<=', Carbon::now())
+            ->where('games.kickoff', '>=', Carbon::now()->subDays(3)->toDateTimeString())
+            ->groupBy('players.id')->pluck('players.id');
 
-    $playersOut = Player::query()->leftJoin('teams', 'players.team_id', '=', 'teams.id')->leftJoin('games',function($join) {
-        $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
-    })->whereRaw('(`games`.`winning_team_id` != `teams`.`id` AND `games`.`winning_team_id` != 0 AND `games`.`id` IS NOT NULL)')->groupBy('players.id')->pluck('players.id');
+        // Create array of all excluded player IDs including current player
+        //
+        $excludedPlayerIds = $usedPlayerIds->merge($playersAlreadyPlayed)->merge($playersOut)
+            ->push($this->currentPlayerId)  // Add current player to excluded list
+            ->unique()
+            ->values();
 
+        // Debug logging
+        \Log::info('Loading eligible players', [
+            'position' => $this->rosterPosition,
+            'usedPlayerIds' => $usedPlayerIds,
+            'currentPlayerId' => $this->currentPlayerId
+        ]);
 
-    // Create array of all excluded player IDs including current player
-    $excludedPlayerIds = $usedPlayerIds->merge($droppedPlayerIds)->merge($playersOut)
-        ->push($this->currentPlayerId)  // Add current player to excluded list
-        ->unique()
-        ->values();
-
-    // Debug logging
-    \Log::info('Loading eligible players', [
-        'position' => $this->rosterPosition,
-        'usedPlayerIds' => $usedPlayerIds,
-        'droppedPlayerIds' => $droppedPlayerIds,
-        'currentPlayerId' => $this->currentPlayerId
-    ]);
-
-    // Get the base query for eligible players
-    $this->players = Player::where(function($query) {
-            if ($this->rosterPosition === 'QB') {
-                $query->where('position', 'QB');
-            }
-            elseif (str_starts_with($this->rosterPosition, 'RB')) {
-                $query->where('position', 'RB');
-            }
-            elseif (str_starts_with($this->rosterPosition, 'WR')) {
-                $query->where('position', 'WR');
-            }
-            elseif ($this->rosterPosition === 'FLEX') {
-                $query->whereIn('position', ['RB', 'WR', 'TE']);
-            }
-            elseif ($this->rosterPosition === 'TE') {
-                $query->where('position', 'TE');
-            }
-        })
-        ->whereNotIn('id', $excludedPlayerIds)
-        ->get();
+        // Get the base query for eligible players
+        $this->players = Player::where(function($query) {
+                if ($this->rosterPosition === 'QB') {
+                    $query->where('position', 'QB');
+                }
+                elseif (str_starts_with($this->rosterPosition, 'RB')) {
+                    $query->where('position', 'RB');
+                }
+                elseif (str_starts_with($this->rosterPosition, 'WR')) {
+                    $query->where('position', 'WR');
+                }
+                elseif ($this->rosterPosition === 'FLEX') {
+                    $query->whereIn('position', ['RB', 'WR', 'TE']);
+                }
+                elseif ($this->rosterPosition === 'TE') {
+                    $query->where('position', 'TE');
+                }
+            })
+            ->whereNotIn('id', $excludedPlayerIds)
+            ->get();
 
         // Debug logging
         \Log::info('Eligible players loaded', [
