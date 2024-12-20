@@ -31,11 +31,16 @@ class Entry extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function playerChangeHistory()
+    public function getRank()
     {
-        return $this->hasMany(PlayerChangeHistory::class);
+        $entires=Entry::all()
+            ->sortByDesc(function($entry) {
+                return $entry->total_points;
+            })->values();
+        return($entires->search(function($entry) {
+            return $entry->id === $this->id;
+        })+1);
     }
-
     public function getTotalPointsAttribute()
     {
         return($this->select('entries.id as id','players.name as name','teams.name as team')->leftJoin('entry_player', 'entries.id', '=', 'entry_player.entry_id')
@@ -67,23 +72,26 @@ class Entry extends Model
 
     public function getPointsByRound($round)
     {
-        $points=Entry::select('entries.id as id','players.name as name','teams.name as team')->leftJoin('entry_player', 'entries.id', '=', 'entry_player.entry_id')
-            ->leftJoin('players', 'entry_player.player_id', '=', 'players.id')
-            ->leftJoin('teams', 'players.team_id', '=', 'teams.id')
-            ->leftJoin('games',function($join) {
-                $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '),'=',\DB::raw('1'));
-            })
-            ->leftJoin('player_stats',function($join) {
-                $join->on('players.id', '=', 'player_stats.player_id')
-                    ->on('games.id', '=', 'player_stats.game_id');
-            })->where('entries.id',$this->id)->where('games.round',$round)
-            ->whereRaw('entry_player.created_at < games.kickoff')
-            ->where(function ($query) {
-                $query->whereNull('entry_player.removed_at')
-                    ->orWhereRaw('entry_player.removed_at > games.kickoff');
-            })->sum('player_stats.points');
+        if(Game::where('round', $round)->where('kickoff','<',now())->first()) {
+            $points = Entry::select('entries.id as id', 'players.name as name', 'teams.name as team')->leftJoin('entry_player', 'entries.id', '=', 'entry_player.entry_id')
+                ->leftJoin('players', 'entry_player.player_id', '=', 'players.id')
+                ->leftJoin('teams', 'players.team_id', '=', 'teams.id')
+                ->leftJoin('games', function ($join) {
+                    $join->on(\DB::raw('( teams.id = games.home_team_id OR teams.id = games.away_team_id) and 1 '), '=', \DB::raw('1'));
+                })
+                ->leftJoin('player_stats', function ($join) {
+                    $join->on('players.id', '=', 'player_stats.player_id')
+                        ->on('games.id', '=', 'player_stats.game_id');
+                })->where('entries.id', $this->id)->where('games.round', $round)
+                ->whereRaw('entry_player.created_at < games.kickoff')
+                ->where(function ($query) {
+                    $query->whereNull('entry_player.removed_at')
+                        ->orWhereRaw('entry_player.removed_at > games.kickoff');
+                })->sum('player_stats.points');
 
-        return($points??0);
+            return ($points ?? 0);
+        }
+        return null;
 
     }
 

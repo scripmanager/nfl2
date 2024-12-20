@@ -29,12 +29,12 @@
     <!-- Changes Remaining Card -->
 <x-card title="Changes Remaining">
         <p class="mt-2 text-2xl font-bold">{{ $entry->getChangesRemaining() }} / 2</p>
-</x-card>   
+</x-card>
 
     <!-- Players Active Card -->
        <x-card title="Players Active">
         <p class="mt-2 text-2xl font-bold">{{ $playersActive->count() }} / 8</p>
-</x-card>   
+</x-card>
 </div>
 
 <!-- Full Width Points by Position Card -->
@@ -94,7 +94,7 @@
                             <tr class="bg-gray-100">
                                 <th class="px-6 py-2">Position</th>
                                 <th class="px-6 py-2 text-left">Player Name</th>
-                                <th class="px-6 py-2">Wildcard</th>
+                                <th class="px-6 py-2">Wild Card</th>
                                 <th class="px-6 py-2">Divisional</th>
                                 <th class="px-6 py-2">Conference</th>
                     <th class="px-6 py-2">Super Bowl</th>
@@ -135,7 +135,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ number_format($entry->getPlayerPoints($player->id,'Wild Card'), 2) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ !is_null($player->getPoints('Divisional'))&&is_null($player->pivot->removed_at) ? number_format($entry->getPlayerPoints($player->id,'Divisional'), 2):'' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right">{{ !is_null($player->getPoints('Divisional'))&&is_null($player->pivot->removed_at) ? number_format($entry->getPlayerPoints($player->id,'Divisional'), 2):'' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ !is_null($player->getPoints('Conference'))&&is_null($player->pivot->removed_at) ? number_format($player->getPoints('Conference'), 2):''  }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">{{ !is_null($player->getPoints('Super B'))&&is_null($player->pivot->removed_at) ? number_format($player->getPoints('Super Bowl'), 2):''  }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right font-bold">{{ number_format($playerTotalPoints, 2) }}</td>

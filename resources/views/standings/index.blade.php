@@ -21,29 +21,29 @@
                                 <th class="px-4 py-2">Entry Name</th>
                                 <th class="px-4 py-2">Owner</th>
                                 <th class="px-4 py-2">Changes Left</th>
-                                <th class="px-4 py-2">Wildcard</th>
+                                <th class="px-4 py-2">Wild Card</th>
                                 <th class="px-4 py-2">Divisional</th>
                                 <th class="px-4 py-2">Conference</th>
-                                <th class="px-4 py-2">Superbowl</th>
+                                <th class="px-4 py-2">Super Bowl</th>
                                 <th class="px-4 py-2">Total</th>
                                 <th class="px-4 py-2"></th>  <!-- New column -->
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($entries as $index => $entry)
-                                    <tr class="text-center odd:bg-gray-50 even:bg-white">
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                                    <tr class="text-center odd:bg-gray-50 even:bg-white text-gray-900">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium ">
                                             {{ $index + 1 }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ $entry->entry_name }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ $entry->user->name }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900 text-center">{{ $entry->getChangesRemaining() }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->getPointsByRound('Wild Card'), 1) }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->getPointsByRound('Divisional'), 1) }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->getPointsByRound('Conference'), 1) }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->getPointsByRound('Super Bowl'), 1) }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ number_format($entry->total_points, 1) }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-left font-semibold">{{ $entry->entry_name }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-left">{{ $entry->user->name }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ $entry->getChangesRemaining() }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ !is_null($rowPoints=$entry->getPointsByRound('Wild Card'))? number_format($rowPoints, 2):'' }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ !is_null($rowPoints=$entry->getPointsByRound('Divisional'))? number_format($rowPoints, 2):'' }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ !is_null($rowPoints=$entry->getPointsByRound('Conference'))? number_format($rowPoints, 2):'' }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ !is_null($rowPoints=$entry->getPointsByRound('Super Bowl'))? number_format($rowPoints, 2):'' }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-center">{{ number_format($entry->total_points, 1) }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 ">
                                             <x-secondary-button class="ml-3 bg-nfl-primary text-white hover:bg-nfl-secondary px-1 py-1 rounded" onclick="window.location.href='{{ route('entries.public.roster', $entry) }}'">
                                                 View Roster
                                             </x-secondary-button>

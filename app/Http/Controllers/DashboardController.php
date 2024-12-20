@@ -23,20 +23,7 @@ class DashboardController extends Controller
             ])
             ->get();
 
-        // Calculate total points for each entry and get roster positions
-        $entries->each(function ($entry) {
-
-            // Get point breakdown by round
-//            $entry->weekly_points = $entry->players->flatMap->stats
-//                ->groupBy(function ($stat) {
-//
-//                    return $stat->game->kickoff->format('W');
-//                })
-//                ->map(function ($stats) use ($entry) {
-//                    return $entry->calculateTotalPoints($stats);
-//                    //OLD CODE BELOW. NOT SURE WHAT IT WAS CALLING
-//                    //return $stats->sum->calculatePoints();
-//                });
+         $entries->each(function ($entry) {
 
             $entryActivePlayers=$entry->activePlayers();
             // Get the roster with positions for each entry

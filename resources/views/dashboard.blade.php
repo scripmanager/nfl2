@@ -19,7 +19,7 @@
     <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Overview Section -->
-            <x-card title="Overview">
+            <x-card >
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="bg-nfl-primary border border-nfl-primary/20 p-4 rounded-lg">
                         <div class="text-lg font-semibold text-white mb-4">Total Entries</div>
@@ -63,8 +63,10 @@
                         @foreach($entries as $entry)
                             <div class="border rounded-lg p-4">
                                 <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-xl font-semibold">{{ $entry->entry_name }}</h3>
-                                    <span class="text-xl font-bold">{{ $entry->total_points ?? 0 }}<span class="ml-0.5 text-gray-400 text-base font-extralight"> pts</span></span>
+                                    <h3 class="text-2xl font-semibold">{{ $entry->entry_name }}</h3>
+                                   <div class="text-center">
+                                       <span class="text-2xl font-extrabold tracking-wide text-center subpixel-antialiased">{{ $entry->total_points ?? 0 }}</span><span class="leading-3 text-gray-400 text-base text-sm font-extralight block text-center">Total Points ({{ Number::ordinal($entry->getRank()) }})</span>
+                                   </div>
                                 </div>
 
                                 <div class="space-y-2">
@@ -128,19 +130,19 @@
 {{--                                @foreach($entry->weekly_points as $week => $points)--}}
                                     <div class="flex justify-between items-center">
                                         <span class="text-gray-600">Wild Card</span>
-                                        <span class="font-medium">{{ number_format($entry->getPointsByRound('Wild Card'), 2) }}</span>
+                                        <span class="font-medium">{{ !is_null($rowPoints=$entry->getPointsByRound('Wild Card'))? number_format($rowPoints, 2):'' }}</span>
                                     </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Divisional</span>
-                                    <span class="font-medium">{{ number_format($entry->getPointsByRound('Divisional'), 2) }}</span>
+                                    <span class="font-medium">{{ !is_null($rowPoints=$entry->getPointsByRound('Divisional'))? number_format($rowPoints, 2):'' }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Conference</span>
-                                    <span class="font-medium">{{ number_format($entry->getPointsByRound('Conference'), 2) }}</span>
+                                    <span class="font-medium">{{ !is_null($rowPoints=$entry->getPointsByRound('Conference'))? number_format($rowPoints, 2):'' }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Super Bowl</span>
-                                    <span class="font-medium">{{ number_format($entry->getPointsByRound('Super Bowl'), 2) }}</span>
+                                    <span class="font-medium">{{ !is_null($rowPoints=$entry->getPointsByRound('Super Bowl'))? number_format($rowPoints, 2):'' }}</span>
                                 </div>
 {{--                                @endforeach--}}
                             </div>
